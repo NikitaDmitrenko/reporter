@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/jquery-1.12.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
+    <title>Camera</title>
+    <script type="text/javascript" language="javascript" charset="UTF-8">
+        $(document).ready(function(){
+            console.log(formToJSON());
+            $("#submit").on('click', function(){
+                $.ajax({
+                    url: 'http://localhost:8080/webapi/club/categories',
+                    type : "POST",
+                    contentType: "application/json; charset=UTF-8",
+                    dataType : "json",
+                    data : formToJSON(),
+                    success : function(result) {
+                        alert("Please reg your fucking camera");
+                    },
+                    error: function(xhr, resp, text) {
+                        console.log(xhr, resp, text);
+                    }
+                })
+            });
+        });
+
+        function formToJSON(){
+            return JSON.stringify({
+                "clubname": $('#clubname').val(),
+                "categories"   : $('#categories').val()
+            });
+        }
+    </script>
+</head>
+<body>
+<section>
+    <div class="container">
+        <div class="row">
+            <div align="center" class="col-lg-12 col-md-12 col-sm-12">
+                <img style="max-width: 100%;" src="img/logo.jpg">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="col-md-12 col-sm-12">
+            <form class="form-horizontal" id="formoid" role="form" action="http://localhost:8080/webapi/club/camera/registration" method="post" enctype="application/x-www-form-urlencoded">
+                <div class="form-group">
+                    <label for="clubname" class="control-label" >Club name:</label>
+                    <div>
+                        <input class="form-control" id="clubname" type="text" name="clubname" autofocus placeholder="Enter club name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="categories" class="control-label" >Club name:</label>
+                    <div id="categories">
+                        <input class="form-control" type="radio"  name="categories" value="gallery" checked> Gallery<br>
+                        <input class="form-control" type="radio"  name="categories" value="club"> Club<br>
+                        <input class="form-control" type="radio"  name="categories" value="restaraunt"> Restaraunt
+                        <input class="form-control" type="radio"  name="categories" value="park"> Park
+                        <input class="form-control" type="radio"  name="categories" value="trc"> Shopping centers
+                        <input class="form-control" type="radio"  name="categories" value="other"> Park
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input id="submit" type="button" name="submit" value="submit" class="btn btn-lg btn-default btn-block" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="results" id="results"></div>
+</section>
+</body>
+</html>

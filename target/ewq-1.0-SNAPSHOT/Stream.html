@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/jquery-1.12.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
+    <title>Camera</title>
+    <script type="text/javascript" language="javascript" charset="UTF-8">
+        $(document).ready(function(){
+            console.log(formToJSON());
+            $("#submit").on('click', function(){
+                $.ajax({
+                    url: 'http://localhost:8080/webapi/club/camera/registration',
+                    type : "POST",
+                    contentType: "application/json; charset=UTF-8",
+                    dataType : "json",
+                    data : formToJSON(),
+                    success : function(result) {
+                        alert("Please reg your fucking camera");
+                    },
+                    error: function(xhr, resp, text) {
+                        console.log(xhr, resp, text);
+                    }
+                })
+            });
+        });
+
+        function formToJSON(){
+            return JSON.stringify({
+                "clubname": $('#clubname').val(),
+                "cameraName": $('#cameraName').val(),
+                "streamurl" : $('#streamurl').val(),
+            });
+        }
+    </script>
+</head>
+<body>
+<section>
+    <div class="container">
+        <div class="row">
+            <div align="center" class="col-lg-12 col-md-12 col-sm-12">
+                <img style="max-width: 100%;" src="img/logo.jpg">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="col-md-12 col-sm-12">
+            <form class="form-horizontal" id="formoid" role="form" action="http://localhost:8080/webapi/club/camera/registration" method="post" enctype="application/x-www-form-urlencoded">
+                <div class="form-group">
+                    <label for="clubname" class="control-label" >Club name:</label>
+                    <div>
+                        <input class="form-control" id="clubname" type="text" name="clubname" autofocus placeholder="Enter club name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cameraName">Camera name:</label>
+                    <div>
+                        <input class="form-control" id="cameraName" type="text" name="cameraName"  autofocus placeholder="Enter camera name" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="streamurl">Streamurl name:</label>
+                    <div>
+                        <input class="form-control" id="streamurl" type="text" name="streamurl"  autofocus placeholder="Enter StreamURL" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input id="submit" type="button" name="submit" value="submit" class="btn btn-lg btn-default btn-block" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="results" id="results"></div>
+</section>
+</html>

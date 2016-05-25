@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/jquery-1.12.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
+    <script type="text/javascript" language="javascript" charset="UTF-8">
+
+        $(document).ready(function(){
+            console.log(formToJSON());
+            $("#submit").on('click', function(){
+                $.ajax({
+                    url: 'http://localhost:8080/webapi/club/registration',
+                    type : "POST",
+                    contentType: "application/json; charset=UTF-8",
+                    dataType : "json",
+                    data : formToJSON(),
+                    success : function(result) {
+                        alert("Go to http://server.tripodapp.com:8080/camera.html  to add new cameras to your club");
+                    },
+                    error: function(xhr, resp, text) {
+                        console.log(xhr, resp, text);
+                    }
+                })
+            });
+        });
+
+        function formToJSON(){
+            return JSON.stringify({
+                "clubname": $('#clubname').val(),
+                "email"   : $('#email').val(),
+                "website" : $('#website').val(),
+                "city"    : $('#city').val(),
+                "country" : $('#country').val(),
+                "address" : $('#address').val(),
+                "mPhone"  : $('#mobilePhone').val(),
+                "vk"   : $('#vk').val(),
+                "tw" : $('#tw').val(),
+                "fb"    : $('#fb').val(),
+                "longitude" : $('#longitude').val(),
+                "latitude" : $('#latitude').val(),
+                "instagram": $('#instagram').val()
+            });
+        }
+    </script>
+</head>
+<body>
+<section>
+    <div class="container">
+        <div class="row">
+            <div align="center" class="col-lg-12 col-md-12 col-sm-12">
+                <img style="max-width: 100%;" src="img/logo.jpg">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="col-md-12 col-sm-12">
+            <form class="form-horizontal" id="formoid" role="form" action="http://localhost:8080/webapi/club/registration" method="post" enctype="application/x-www-form-urlencoded">
+                <div class="form-group">
+                    <label for="clubname" class="control-label" >Club name:</label>
+                    <div>
+                        <input class="form-control" id="clubname" type="text" name="clubname" placeholder="Enter club name" required >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <div>
+                        <input class="form-control" id="email" type="email" name="email"  placeholder="Enter email" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="website">Web-site:</label>
+                    <div>
+                        <input class="form-control" id="website" type="url" name="website"  placeholder="Enter web-site" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <div>
+                        <input class="form-control" id="city" type="text" name="city"  placeholder="Enter city" required >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <div>
+                        <input class="form-control" id="country" type="text" name="country"  placeholder="Enter country" required >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <div>
+                        <input class="form-control" id ="address" type="text" name="address"  placeholder="Enter address" required >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mobilePhone">Mobile phone:</label>
+                    <div>
+                        <input class="form-control" id="mobilePhone" type="text" name="mobilePhone"  placeholder="Enter mobile phone" required >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="vk" class="control-label" >Vk :</label>
+                    <div>
+                        <input class="form-control" id="vk" type="text" name="vk" placeholder="Enter vk" required >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tw">Twitter:</label>
+                    <div>
+                        <input class="form-control" id="tw" type="text" name="tw"  placeholder="Enter twitter" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="fb">Facebook:</label>
+                    <div>
+                        <input class="form-control" id="fb" type="text" name="fb"  placeholder="Enter facebook" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="longitude">Longitude:</label>
+                    <div>
+                        <input class="form-control" id="longitude" type="text" name="longitude"  placeholder="Enter longitude" required >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="latitude">Latitude:</label>
+                    <div>
+                        <input class="form-control" id="latitude" type="text" name="latitude"  placeholder="Enter latitude" required >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="instagram">Instagram:</label>
+                    <div>
+                        <input class="form-control" id="instagram" type="text" name="instagram"  placeholder="Enter instagram" required >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input id="submit" type="button" name="submit" value="submit" class="btn btn-lg btn-default btn-block" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="results" id="results"></div>
+</section>
+</body>
+
+</html>
