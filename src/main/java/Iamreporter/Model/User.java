@@ -24,12 +24,6 @@ public class User {
     @Column(name="USER_NAME")
     private String name;
 
-    @Column(name = "USER_SURNAME")
-    private String surName;
-
-    @Column(name = "USER_NICK_NAME")
-    private String nickName;
-
     @Column(name = "AVATAR_URL")
     private String avatarURL;
 
@@ -48,11 +42,14 @@ public class User {
     @Column(name = "DATE")
     private long date;
 
-    @Column(name = "USER_UUID")
-    private String userUUID;
+    @Column(name = "PRIVATE_UUID")
+    private String privateUUID;
 
     @Column(name = "EMAIL")
     private String email;
+
+    @Column(name = "PUBLIC_UUID")
+    private String publicUUID;
 
     @Column(name = "PASSWORD")
     private String password;
@@ -64,37 +61,12 @@ public class User {
     @Column(name = "TWITTER_ID")
     private String twitterId;
 
-    @ManyToMany
-    private List<VkontakteFriend> vkontakteFriendList = new ArrayList<>();
-
-    @ManyToMany
-    private List<TwitterFriend> twitterFriends = new ArrayList<>();
-
-    @ManyToMany
-    private List<FacebookFriend> facebookFriends = new ArrayList<>();
-
-    public List<VkontakteFriend> getVkontakteFriendList() {
-        return vkontakteFriendList;
+    public String getPublicUUID() {
+        return publicUUID;
     }
 
-    public void setVkontakteFriendList(List<VkontakteFriend> vkontakteFriendList) {
-        this.vkontakteFriendList = vkontakteFriendList;
-    }
-
-    public List<TwitterFriend> getTwitterFriends() {
-        return twitterFriends;
-    }
-
-    public void setTwitterFriends(List<TwitterFriend> twitterFriends) {
-        this.twitterFriends = twitterFriends;
-    }
-
-    public List<FacebookFriend> getFacebookFriends() {
-        return facebookFriends;
-    }
-
-    public void setFacebookFriends(List<FacebookFriend> facebookFriends) {
-        this.facebookFriends = facebookFriends;
+    public void setPublicUUID(String publicUUID) {
+        this.publicUUID = publicUUID;
     }
 
     public String getPassword() {
@@ -129,12 +101,12 @@ public class User {
         this.date = date;
     }
 
-    public String getUserUUID() {
-        return userUUID;
+    public String getPrivateUUID() {
+        return privateUUID;
     }
 
-    public void setUserUUID(String userUUID) {
-        this.userUUID = userUUID;
+    public void setPrivateUUID(String userUUID) {
+        this.privateUUID = userUUID;
     }
 
     public int getId() {
@@ -193,14 +165,6 @@ public class User {
         this.description = description;
     }
 
-    public String getSurName() {
-        return surName;
-    }
-
-    public void setSurName(String surName) {
-        this.surName = surName;
-    }
-
     public String getVkId() {
         return vkId;
     }
@@ -224,4 +188,5 @@ public class User {
     public void setTwitterId(String twitterId) {
         this.twitterId = twitterId;
     }
+
 }

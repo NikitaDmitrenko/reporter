@@ -34,7 +34,6 @@ public class AllReporter {
                 jsonObject1.put("nickName",user.getNickName());
                 jsonObject1.put("name",user.getName());
                 jsonObject1.put("callName",user.getCallName());
-                jsonObject1.put("surName",user.getSurName());
                 jsonObject1.put("avatarURL",user.getAvatarURL());
                 jsonObject1.put("description",user.getDescription());
                 jsonObject1.put("city",user.getCity());

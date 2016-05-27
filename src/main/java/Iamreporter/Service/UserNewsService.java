@@ -33,20 +33,21 @@ public class UserNewsService {
     }
 
     @POST
-    @Path("/{newsUUID}/uploadnewsphoto")
+    @Path("/{userUUID}/{newsUUID}/uploadnewsphoto")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     public String uploadNewsPhoto(@PathParam("userUUID")String userUUID,
-                                    @PathParam("newsUUID") String uuid,
-                                   @FormDataParam("file") InputStream uploadedInputStream,
-                                   @FormDataParam("file") FormDataContentDisposition fileDetail)throws IOException {
-        User user = db.getUserByUUID(userUUID);
+                                  @PathParam("newsUUID") String uuid,
+                                  @FormDataParam("file") InputStream uploadedInputStream,
+                                  @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
+        User user = db.getUserByPrivateUUID(userUUID);
         JSONObject jsonObject = new JSONObject();
         if (user != null) {
+
             String mediaFileUUID = UUID();
-            String location = PHOTO_LOCATION_URL + uuid +mediaFileUUID + fileDetail.getFileName();
-            String bigPhotourl = PHOTO_WEB_URL + uuid +mediaFileUUID + fileDetail.getFileName();
-            String smallPhotoUrl = uuid + mediaFileUUID + fileDetail.getFileName();
+            String location = MEDIA_FILE_LOCATION + uuid + mediaFileUUID + fileDetail.getFileName();
+            String bigPhotourl =   MEDIA_FILE_URL + uuid + mediaFileUUID + fileDetail.getFileName();
+            String smallPhotoUrl = MEDIA_FILE_URL + uuid + mediaFileUUID + fileDetail.getFileName();
 
             MediaFile file = new MediaFile();
             file.setDate(UnixTime());
@@ -54,7 +55,7 @@ public class UserNewsService {
             file.setSmallPhotoURL(smallPhotoUrl);
             file.setVideoURL("");
             file.setUuid(mediaFileUUID);
-            file.setUserUUID(userUUID);
+            file.setUserUUID(user.getPrivateUUID());
 
             mediaFileDB.saveUser(file);
 
@@ -69,21 +70,21 @@ public class UserNewsService {
     }
 
     @POST
-    @Path("/{newsUUID}/{userUUID}/uploadnewsvideo")
+    @Path("/{userUUID}/{newsUUID}/uploadnewsvideo")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     public String uploadNewsVideo(@PathParam("userUUID")String userUUID,
                                   @PathParam("newsUUID")String uuid,
                                   @FormDataParam("file")InputStream uploadedInputStream,
                                   @FormDataParam("file")FormDataContentDisposition fileDetail)throws IOException {
-        User user = db.getUserByUUID(userUUID);
+        User user = db.getUserByPrivateUUID(userUUID);
         JSONObject jsonObject = new JSONObject();
         if (user != null) {
 
             String mediaFileUUID = UUID();
 
-            String location = PHOTO_LOCATION_URL + uuid + mediaFileUUID+ fileDetail.getFileName();
-            String url = PHOTO_WEB_URL + uuid + mediaFileUUID + fileDetail.getFileName();
+            String location = MEDIA_FILE_LOCATION + uuid + mediaFileUUID+ fileDetail.getFileName();
+            String url = MEDIA_FILE_URL + uuid + mediaFileUUID + fileDetail.getFileName();
 
             MediaFile file = new MediaFile();
 
@@ -115,9 +116,5 @@ public class UserNewsService {
     public String getNewsByUUID(@PathParam("newsUUID")String uuid){
         return service.getNewsDate(uuid);
     }
-
-
-
-
 
 }

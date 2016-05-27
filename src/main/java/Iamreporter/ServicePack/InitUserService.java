@@ -1,75 +1,58 @@
 package Iamreporter.ServicePack;
 
 import Iamreporter.DB.UserDB;
-import Iamreporter.Model.FacebookFriend;
-import Iamreporter.Model.TwitterFriend;
 import Iamreporter.Model.User;
 
-import Iamreporter.Model.VkontakteFriend;
-import com.google.gson.Gson;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.UUID;
+
+import static Iamreporter.Helper.Helper.*;
 
 public class InitUserService {
 
-    static UserDB userDAO = new UserDB();
+    private  UserDB userDB = new UserDB();
 
-    public static ArrayList<FacebookFriend> getFacebookFriends (JSONObject js){
-        JSONArray jsonFacebookFriends = js.getJSONArray("facebookFriends");
-        ArrayList<FacebookFriend> facebookFriends = new ArrayList<>();
-        Gson gson = new Gson();
-        for(int i = 0;i<jsonFacebookFriends.length();i++) {
-            FacebookFriend facebookFriend = gson.fromJson(jsonFacebookFriends.getJSONObject(i).toString(), FacebookFriend.class);
-            userDAO.saveFacebookFriend(facebookFriend);
-            facebookFriends.add(facebookFriend);
-        }
-        return facebookFriends;
-    }
-
-    public static ArrayList<TwitterFriend> getTwitterFriends (JSONObject js){
-        JSONArray jsonTwitterFriends = js.getJSONArray("twitterFriends");
-        ArrayList<TwitterFriend> twitterFriends= new ArrayList<>();
-        Gson gson = new Gson();
-        for(int i = 0;i<jsonTwitterFriends.length();i++){
-            TwitterFriend twitterFriend = gson.fromJson(
-                    jsonTwitterFriends.getJSONObject(i).toString(),
-                    TwitterFriend.class);
-            userDAO.saveTwitterFriend(twitterFriend);
-            twitterFriends.add(twitterFriend);
-        }
-        return twitterFriends;
-    }
-
-    public static ArrayList<VkontakteFriend> getVkontkteFriends(JSONObject js){
-        JSONArray jsonGoogleFriends = js.getJSONArray("vkontakteFriends");
-        ArrayList<VkontakteFriend> VkontakteFriends = new ArrayList<>();
-        Gson gson = new Gson();
-        for(int i = 0;i<jsonGoogleFriends.length();i++){
-            VkontakteFriend googleFriend = gson.fromJson(jsonGoogleFriends.getJSONObject(i).toString(),VkontakteFriend.class);
-            userDAO.saveVkontakteFriend(googleFriend);
-            VkontakteFriends.add(googleFriend);
-        }
-        return VkontakteFriends;
-    }
-
-    public static User userInit(JSONObject js){
-        User user = new User();
+    public  User userInit(JSONObject js){
+        User user ;
         String name = js.getString("name");
-        UUID uuid = UUID.randomUUID();
-        user.setNickName(name);
-        user.setUserUUID(uuid.toString());
         if(js.has("facebook_ID")){
-            user.setFacebookId(js.getString("facebook_ID"));
-            user.setFacebookFriends(getFacebookFriends(js));
+            String facebookId = js.getString("facebook_ID");
+            user = userDB.getUserByFacebookId(facebookId);
+            if(user==null){
+                user = new User();
+                user.setFacebookId(facebookId);
+                user = setUserData(user,name);
+            }
         }else if(js.has("twitter_ID")){
-            user.setTwitterId(js.getString("twitter_ID"));
-            user.setTwitterFriends(getTwitterFriends(js));
+            String twitterId = js.getString("twitter_ID");
+            user = userDB.getUserByTwitterId(twitterId);
+            if(user==null){
+                user = new User();
+                user.setTwitterId(twitterId);
+                user = setUserData(user,name);
+            }
         }else {
-            user.setVkId(js.getString("vkontakte_ID"));
-            user.setVkontakteFriendList(getVkontkteFriends(js));
+            String vkontakteId = js.getString("vkontakte_ID");
+            user = userDB.getUserByVkId(vkontakteId);
+            if(user==null){
+                user = new User();
+                user.setVkId(vkontakteId);
+                user = setUserData(user,name);
+            }
         }
+        return user;
+    }
+
+    public String getUUIDBySocials(String socialId) {
+        JSONObject js = new JSONObject(socialId);
+        User user = userInit(js);
+        return new JSONObject().put("uuid", user.getPrivateUUID()).toString();
+    }
+
+    public User setUserData(User user,String name){
+        user.setNickName(name);
+        user.setPrivateUUID(UUID());
+        user.setPublicUUID(UUID());
+        userDB.saveUser(user);
         return user;
     }
 

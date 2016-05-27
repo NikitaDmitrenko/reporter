@@ -18,30 +18,25 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
 public class SocialRegistrationResource {
 
-    UserDB userDB = new UserDB();
+    InitUserService service = new InitUserService();
 
     @POST
     @Path("/twitterRegist")
     public String registTwitter(String twitterId) {
-        return getUUIDBySocials(twitterId);
+        return service.getUUIDBySocials(twitterId);
     }
 
     @POST
     @Path("/vkontakteRegist")
     public String registvkontake(String vkontakteId) {
-        return getUUIDBySocials(vkontakteId);
+        return service.getUUIDBySocials(vkontakteId);
     }
 
     @POST
     @Path("/facebookRegist")
     public String registFacebook(String facebookId) {
-        return getUUIDBySocials(facebookId);
+        return service.getUUIDBySocials(facebookId);
     }
 
-    public String getUUIDBySocials(String socialId) {
-        JSONObject js = new JSONObject(socialId);
-        User user = InitUserService.userInit(js);
-        userDB.saveUser(user);
-        return new JSONObject().put("uuid", user.getUserUUID()).toString();
-    }
+
 }

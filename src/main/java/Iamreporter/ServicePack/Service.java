@@ -25,32 +25,22 @@ public class Service {
     UserDB db = new UserDB();
     ViewsDb viewsDB = new ViewsDb();
     LikesDB likeDB = new LikesDB();
+    final String username = "dmitrenkonikita1213@gmail.com";
+    final String password = "telez1213";
 
-    public UserNews createNewNews(String json, User user){
-        JSONObject jsonObject = new JSONObject(json);
-
-        UserNews news = new UserNews();
-        news.setUserNewsTheme(jsonObject.getString("theme"));
-        news.setCity(jsonObject.getString("city"));
-        news.setCategories(jsonObject.getInt("category"));
-        news.setText(jsonObject.getString("text"));
-        news.setAuthorUUID(user.getUserUUID());
-        news.setUuid(UUID());
-
-        userNewsDB.saveUserNews(news);
-
-        return news;
-    }
 
     public UserNews registerUserNews(String json,User user){
         JSONObject jsonObject = new JSONObject(json);
         UserNews news = new UserNews();
+
         news.setUserNewsTheme(jsonObject.getString("theme"));
         news.setCity(jsonObject.getString("city"));
         news.setCategories(jsonObject.getInt("category"));
         news.setText(jsonObject.getString("text"));
-        news.setAuthorUUID(user.getUserUUID());
+
+        news.setAuthorUUID(user.getPrivateUUID());
         news.setUuid(UUID());
+
         userNewsDB.saveUserNews(news);
         return news;
     }
@@ -68,14 +58,12 @@ public class Service {
         JSONObject jsonObject = new JSONObject();
 
         if(userNews!=null){
-            User user = db.getUserByUUID(userNews.getAuthorUUID());
+            User user = db.getUserByPrivateUUID(userNews.getAuthorUUID());
             jsonObject.put("category",userNews.getCategories());
             jsonObject.put("theme",userNews.getUserNewsTheme());
             jsonObject.put("text",userNews.getText());
             jsonObject.put("date",userNews.getDate());
-            jsonObject.put("authorName",user.getName());
-            jsonObject.put("authorSurName",user.getSurName());
-            jsonObject.put("authorUUID",user.getUserUUID());
+            jsonObject.put("name",user.getName());
             jsonObject.put("countViews",viewsDB.getUserNewsCountViews(uuid));
             jsonObject.put("likeCounts",likeDB.getNewsLikesCount(userNews.getUuid()));
             jsonObject.put("comments",getComments(uuid));
@@ -88,7 +76,7 @@ public class Service {
         List<CommentCreator> creators = new ArrayList<>();
         for(Comment comment : comments){
             CommentCreator commentCreator = new CommentCreator();
-            User user = db.getUserByUUID(comment.getAuthorUUID());
+            User user = db.getUserByPrivateUUID(comment.getAuthorUUID());
             commentCreator.setText(comment.getText());
             commentCreator.setDate(comment.getDate());
             commentCreator.setName(user.getNickName());
@@ -116,16 +104,16 @@ public class Service {
                 user = createNewUser(json);
                 news = createNewNews(json, user);
                 response.put("create",true);
-                response.put("news",news.getUuid());
+                response.put("newsUUID",news.getUuid());
             }else{
                 response.put("create",false);
             }
         }else {
-            user = db.getUserByUUID(jsonObject.getString("userUUID"));
+            user = db.getUserByPrivateUUID(jsonObject.getString("publicUUID"));
             if(user!=null){
                 news = registerUserNews(json, user);
                 response.put("create",true);
-                response.put("news",news.getUuid());
+                response.put("newsUUID",news.getUuid());
             }else{
                 response.put("create",false);
             }
@@ -137,13 +125,11 @@ public class Service {
     public User createNewUser(String json){
         JSONObject jsonObject = new JSONObject(json);
         User user = new User();
-        String name = jsonObject.getString("nameSurName");
-        String [] nameSurname = name.split(" ");
-        user.setName(nameSurname[0]);
-        user.setSurName(nameSurname[1]);
-        user.setUserUUID(jsonObject.getString("userUUID"));
-        user.setDate(UnixTime());
+
+        user.setName(jsonObject.getString("name"));
         user.setEmail(jsonObject.getString("email"));
+
+        user.setDate(UnixTime());
         user.setPassword(UUID());
         user.setCity("");
         user.setNickName("");
@@ -151,18 +137,36 @@ public class Service {
         user.setDescription("");
         user.setCallName("");
         user.setMobilePhone("");
+        user.setPrivateUUID(UUID());
+        user.setPublicUUID(UUID());
+
         db.saveUser(user);
+
         sendRegistrationMessage(jsonObject.getString("email"), json, user.getPassword());
+
         return user;
     }
 
-    public void sendRegistrationMessage(String email, String json,String generatedPassword) {
+    public UserNews createNewNews(String json, User user){
         JSONObject jsonObject = new JSONObject(json);
-        String name = jsonObject.getString("nameSurName");
-        String [] nameSurname = name.split(" ");
-        final String username = "dmitrenkonikita1213@gmail.com";
-        final String password = "telez1213";
 
+        UserNews news = new UserNews();
+        news.setUserNewsTheme(jsonObject.getString("theme"));
+        news.setCity(jsonObject.getString("city"));
+        news.setCategories(jsonObject.getInt("category"));
+        news.setText(jsonObject.getString("text"));
+        news.setAuthorUUID(user.getPrivateUUID());
+        news.setUuid(UUID());
+
+        userNewsDB.saveUserNews(news);
+
+        return news;
+    }
+
+    public void sendRegistrationMessage(String email, String json, String generatedPassword) {
+        JSONObject jsonObject = new JSONObject(json);
+
+        final String nameSurname = jsonObject.getString("name");
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -182,8 +186,41 @@ public class Service {
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(email));
             message.setSubject("Testing Subject");
-            message.setText("Привет , " + nameSurname[0] + " ," + nameSurname[1] + " ты зарегестрирован в приложении ,''Я репортер''" +
+            message.setText("Привет , " + nameSurname + " ты зарегестрирован в приложении ,''Я репортер''" +
                     " Ваш пароль = "+generatedPassword+" :)");
+
+            Transport.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void SendMailToUser(User user, User anotherUser, String json){
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        JSONObject jsonObject = new JSONObject(json);
+        String userEmail = user.getEmail();
+        String anotherUserEmail = anotherUser.getEmail();
+        String subject = jsonObject.getString("subject");
+        String text = jsonObject.getString("text");
+
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("noreplyreporter@reporter.com"));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(anotherUserEmail));
+            message.setSubject(subject);
+            message.setText(text);
 
             Transport.send(message);
         } catch (MessagingException e) {

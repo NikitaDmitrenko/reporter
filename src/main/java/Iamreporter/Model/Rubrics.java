@@ -1,8 +1,6 @@
 package Iamreporter.Model;
 
-/**
- * Created by Nikita on 26.05.2016.
- */
+
 public class Rubrics {
 
     public static final Integer POLITICS = 101;

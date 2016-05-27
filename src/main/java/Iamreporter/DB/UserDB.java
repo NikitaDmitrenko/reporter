@@ -1,10 +1,7 @@
 package Iamreporter.DB;
 
 import Iamreporter.Hibernate.HibernateUtil;
-import Iamreporter.Model.FacebookFriend;
-import Iamreporter.Model.TwitterFriend;
 import Iamreporter.Model.User;
-import Iamreporter.Model.VkontakteFriend;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -45,13 +42,30 @@ public class UserDB {
 
     }
 
-    public User getUserByUUID(String userUUID){
+    public User getUserByPrivateUUID(String privateUUID){
         Transaction transaction = null;
         User user = null;
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            user = (User)session.createQuery("from User where userUUID = :userUUID").setParameter("userUUID",userUUID).uniqueResult();
+            user = (User)session.createQuery("from User where privateUUID = :privateUUID").setParameter("privateUUID", privateUUID).uniqueResult();
+            transaction.commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public User getUserByPublicUUID(String publicUUID){
+        Transaction transaction = null;
+        User user = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            user = (User)session.createQuery("from User where publicUUID = :publicUUID").setParameter("publicUUID", publicUUID).uniqueResult();
             transaction.commit();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -118,7 +132,7 @@ public class UserDB {
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            user = (User)session.createQuery("from User where email = :email and password = :password").setParameter("password",password).setParameter("email", email).uniqueResult();
+            user = (User)session.createQuery("from User where email = :email and password = :password").setParameter("password", password).setParameter("email", email).uniqueResult();
             session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -128,48 +142,55 @@ public class UserDB {
         return user;
     }
 
-    public void saveFacebookFriend(FacebookFriend friend){
+
+    public User getUserByFacebookId(String facebookid){
         Transaction transaction = null;
+        User user = null;
+
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            session.save(friend);
-            transaction.commit();
+            user = (User)session.createQuery("from User where facebookId =:facebookid ").setParameter("facebookid",facebookid).uniqueResult();
+            session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
+        return user;
     }
 
-    public void saveVkontakteFriend(VkontakteFriend friend){
+    public User getUserByVkId(String vkId){
         Transaction transaction = null;
+        User user = null;
+
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            session.save(friend);
-            transaction.commit();
+            user = (User)session.createQuery("from User where vkId =:vkid ").setParameter("vkid",vkId).uniqueResult();
+            session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
+        return user;
     }
 
-    public void saveTwitterFriend(TwitterFriend friend){
+    public User getUserByTwitterId(String twitterId){
         Transaction transaction = null;
+        User user = null;
+
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            session.save(friend);
-            transaction.commit();
+            user = (User)session.createQuery("from User where twitterId =:twitterId ").setParameter("twitterId",twitterId).uniqueResult();
+            session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
+        return user;
     }
 }
