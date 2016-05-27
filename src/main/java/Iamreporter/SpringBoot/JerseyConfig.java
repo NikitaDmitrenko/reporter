@@ -1,5 +1,7 @@
 package Iamreporter.SpringBoot;
 
+import Iamreporter.Service.AllReporter;
+import Iamreporter.Service.Login;
 import Iamreporter.Service.UserNewsService;
 import Iamreporter.Service.UserProfile;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -19,6 +21,8 @@ public class JerseyConfig extends ResourceConfig {
         register(MultiPartFeature.class);
         register(UserNewsService.class);
         register(UserProfile.class);
+        register(AllReporter.class);
+        register(Login.class);
 
     }
 }

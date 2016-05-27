@@ -1,13 +1,9 @@
 package Iamreporter.Service;
 
-import Iamreporter.DB.CommentDB;
-import Iamreporter.DB.ViewsDb;
-import Iamreporter.DB.UserDB;
-import Iamreporter.DB.UserNewsDB;
-import Iamreporter.Model.Comment;
-import Iamreporter.Model.CommentCreator;
-import Iamreporter.Model.User;
-import Iamreporter.Model.UserNews;
+import Iamreporter.DB.*;
+import Iamreporter.Model.*;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +13,12 @@ import javax.mail.internet.MimeMessage;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import static Iamreporter.Helper.Helper.*;
 
@@ -27,19 +26,90 @@ import static Iamreporter.Helper.Helper.*;
 @Component
 public class UserNewsService {
 
-    EmailValidator validator = new EmailValidator();
     UserNewsDB userNewsDB = new UserNewsDB();
     UserDB db = new UserDB();
     ViewsDb viewsDB = new ViewsDb();
     CommentDB commentDB = new CommentDB();
+    MediaFileDB mediaFileDB = new MediaFileDB();
 
     @Path("/create")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String sendNews(String json){
-        System.out.println(json);
         return saveNewNews(json);
+    }
+
+    @POST
+    @Path("/{newsUUID}/uploadnewsphoto")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    public String uploadNewsPhoto(@PathParam("newsUUID") String uuid,
+                                   @FormDataParam("file") InputStream uploadedInputStream,
+                                   @FormDataParam("file") FormDataContentDisposition fileDetail)throws IOException {
+        User user = db.getUserByUUID(uuid);
+        JSONObject jsonObject = new JSONObject();
+        if (user != null) {
+            String mediaFileUUID = UUID();
+            String location = PHOTO_LOCATION_URL + uuid +mediaFileUUID + fileDetail.getFileName();
+            String url = PHOTO_WEB_URL + uuid +mediaFileUUID + fileDetail.getFileName();
+
+            MediaFile file = new MediaFile();
+            file.setDate(UnixTime());
+            file.setPhotoURL(url);
+            file.setSmallPhotoURL("");
+            file.setVideoURL("");
+            file.setUuid(mediaFileUUID);
+
+            mediaFileDB.saveUser(file);
+
+            writeFile(uploadedInputStream, location);
+
+            jsonObject.put("uploadstatus", true);
+            jsonObject.put("avatarURL", url);
+        } else {
+            jsonObject.put("user", false);
+            jsonObject.put("uploadstatus", false);
+        }
+        return jsonObject.toString();
+    }
+
+    @POST
+    @Path("/{newsUUID}/{userUUID}/uploadnewsphoto")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    public String uploadNewsVideo(@PathParam("userUUID")String userUUID,
+                                  @PathParam("newsUUID") String uuid,
+                                  @FormDataParam("file") InputStream uploadedInputStream,
+                                  @FormDataParam("file") FormDataContentDisposition fileDetail)throws IOException {
+        User user = db.getUserByUUID(userUUID);
+        JSONObject jsonObject = new JSONObject();
+        if (user != null) {
+
+            String mediaFileUUID = UUID();
+
+            String location = PHOTO_LOCATION_URL + uuid + mediaFileUUID+ fileDetail.getFileName();
+            String url = PHOTO_WEB_URL + uuid + mediaFileUUID + fileDetail.getFileName();
+
+            MediaFile file = new MediaFile();
+            file.setDate(UnixTime());
+            file.setPhotoURL(url);
+            file.setSmallPhotoURL("");
+            file.setVideoURL("");
+            file.setUuid(mediaFileUUID);
+            file.setNewsUUID(uuid);
+            mediaFileDB.saveUser(file);
+
+            writeFile(uploadedInputStream, location);
+
+            jsonObject.put("uploadstatus", true);
+            jsonObject.put("photoUrl", url);
+
+        } else {
+            jsonObject.put("uploadstatus", false);
+            jsonObject.put("photoUrl", false);
+        }
+        return jsonObject.toString();
     }
 
     @GET
@@ -47,8 +117,7 @@ public class UserNewsService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String getNewsByUUID(@PathParam("newsUUID")String uuid){
-
-        return null;
+        return getNewsDate(uuid);
     }
 
     public String saveNewNews(String json){
@@ -138,7 +207,6 @@ public class UserNewsService {
         if(db.getUserByEmail(email)==null){
             status = true;
         }
-        System.out.println(status);
         return status;
     }
 
@@ -155,7 +223,7 @@ public class UserNewsService {
             jsonObject.put("author",user.getName());
             jsonObject.put("authorUUID",user.getUserUUID());
             jsonObject.put("countViews",viewsDB.getUserNewsCountViews(uuid));
-            jsonObject.put("cooments",getComments(uuid));
+            jsonObject.put("comments",getComments(uuid));
         }
         return jsonObject.toString();
     }

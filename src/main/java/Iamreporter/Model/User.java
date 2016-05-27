@@ -5,6 +5,8 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "USER")
@@ -54,6 +56,46 @@ public class User {
 
     @Column(name = "PASSWORD")
     private String password;
+
+    @Column(name = "VK_ID")
+    private String vkId;
+    @Column(name = "FACEBOOK_ID")
+    private String facebookId;
+    @Column(name = "TWITTER_ID")
+    private String twitterId;
+
+    @ManyToMany
+    private List<VkontakteFriend> vkontakteFriendList = new ArrayList<>();
+
+    @ManyToMany
+    private List<TwitterFriend> twitterFriends = new ArrayList<>();
+
+    @ManyToMany
+    private List<FacebookFriend> facebookFriends = new ArrayList<>();
+
+    public List<VkontakteFriend> getVkontakteFriendList() {
+        return vkontakteFriendList;
+    }
+
+    public void setVkontakteFriendList(List<VkontakteFriend> vkontakteFriendList) {
+        this.vkontakteFriendList = vkontakteFriendList;
+    }
+
+    public List<TwitterFriend> getTwitterFriends() {
+        return twitterFriends;
+    }
+
+    public void setTwitterFriends(List<TwitterFriend> twitterFriends) {
+        this.twitterFriends = twitterFriends;
+    }
+
+    public List<FacebookFriend> getFacebookFriends() {
+        return facebookFriends;
+    }
+
+    public void setFacebookFriends(List<FacebookFriend> facebookFriends) {
+        this.facebookFriends = facebookFriends;
+    }
 
     public String getPassword() {
         return password;
@@ -157,5 +199,29 @@ public class User {
 
     public void setSurName(String surName) {
         this.surName = surName;
+    }
+
+    public String getVkId() {
+        return vkId;
+    }
+
+    public void setVkId(String vkId) {
+        this.vkId = vkId;
+    }
+
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
+
+    public String getTwitterId() {
+        return twitterId;
+    }
+
+    public void setTwitterId(String twitterId) {
+        this.twitterId = twitterId;
     }
 }

@@ -19,6 +19,13 @@ public class MediaFile {
     @Column(name = "PHOTO_URL")
     private String photoURL;
 
+    @Column(name = "MEDIA_FILE")
+    private String uuid;
+
+    @Column(name = "NEWS_UUID")
+    private String newsUUID;
+
+
     @Column(name = "VIDEO_URL")
     private String videoURL;
 
@@ -28,10 +35,16 @@ public class MediaFile {
     @Column(name = "DATE")
     private long date;
 
-    @Column(name = "MEDIA_UUID")
-    private String mediaUUID;
 
     public MediaFile() {
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public int getId() {
@@ -74,11 +87,11 @@ public class MediaFile {
         this.date = date;
     }
 
-    public String getMediaUUID() {
-        return mediaUUID;
+    public String getNewsUUID() {
+        return newsUUID;
     }
 
-    public void setMediaUUID(String mediaUUID) {
-        this.mediaUUID = mediaUUID;
+    public void setNewsUUID(String newsUUID) {
+        this.newsUUID = newsUUID;
     }
 }

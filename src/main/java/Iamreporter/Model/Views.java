@@ -21,18 +21,6 @@ public class Views {
     @Column(name = "IP_ADRESS")
     private String ipAdress;
 
-    @Column(name = "COMMENT_UUID")
-    private String commentUUID;
-
-
-    public String getCommentUUID() {
-        return commentUUID;
-    }
-
-    public void setCommentUUID(String commentUUID) {
-        this.commentUUID = commentUUID;
-    }
-
     public Views() {
     }
 

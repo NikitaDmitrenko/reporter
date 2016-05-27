@@ -25,7 +25,18 @@ public class LikeNews {
     @Column(name = "USER_UUID")
     private String userUUID;
 
+    @Column(name = "COMMENT_UUID")
+    private String commentUUID;
+
     public LikeNews() {
+    }
+
+    public String getCommentUUID() {
+        return commentUUID;
+    }
+
+    public void setCommentUUID(String commentUUID) {
+        this.commentUUID = commentUUID;
     }
 
     public Long getId() {

@@ -20,8 +20,8 @@ public class Comment {
     @Column(name = "COMMENT_UUID")
     private String commentUUID;
 
-    @Column(name = "USER_NEWS_UUID")
-    private String userNewsUUID;
+    @Column(name = "NEWS_UUID")
+    private String newsUUID;
 
     @Column(name = "AUTHOR_UUID")
     private String authorUUID;
@@ -84,11 +84,11 @@ public class Comment {
         this.commentUUID = commentUUID;
     }
 
-    public String getUserNewsUUID() {
-        return userNewsUUID;
+    public String getNewsUUID() {
+        return newsUUID;
     }
 
-    public void setUserNewsUUID(String userNewsUUID) {
-        this.userNewsUUID = userNewsUUID;
+    public void setNewsUUID(String userNewsUUID) {
+        this.newsUUID = userNewsUUID;
     }
 }

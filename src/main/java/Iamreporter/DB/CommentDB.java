@@ -18,7 +18,7 @@ public class CommentDB {
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            comments = (List<Comment>)session.createQuery("from Comment where userNewsUUID =:userNewsUUID order by id desc").setParameter("userNewsUUID",uuid).list();
+            comments = (List<Comment>)session.createQuery("from Comment where newsUUID =:userNewsUUID order by id desc").setParameter("userNewsUUID",uuid).list();
             session.getTransaction();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -27,5 +27,22 @@ public class CommentDB {
             e.printStackTrace();
         }
         return comments;
+    }
+
+    public int getNewsCommentsCount(String newsUUID){
+        Transaction transaction = null;
+        int count = 0;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            count = ((Long)session.createQuery("select count (*) from Comment where newsUUID =:newsUUID").setParameter("newsUUID",newsUUID).uniqueResult()).intValue();
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction !=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return count;
     }
 }

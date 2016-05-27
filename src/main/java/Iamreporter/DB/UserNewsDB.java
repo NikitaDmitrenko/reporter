@@ -80,4 +80,21 @@ public class UserNewsDB {
         return count;
     }
 
+    public List<UserNews> getUserNews(String userUUID){
+        Transaction transaction = null;
+        List<UserNews> userNews = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            userNews = (List<UserNews>)session.createQuery("from UserNews where authorUUID =:userUUID order by date desc ").setParameter("userUUID",userUUID).list();
+            session.beginTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return userNews;
+    }
+
 }

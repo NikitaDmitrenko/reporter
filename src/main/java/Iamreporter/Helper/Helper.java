@@ -36,6 +36,9 @@ public class Helper {
     public static final String AVATARS_LOCATION = "/opt/tomcat/webapps/ROOT/images/avatars/";
     public static final String AVATARS_URL = "http://server.tripodapp.com:8080/images/avatars/";
 
+    public static final String PHOTO_LOCATION_URL = "";
+    public static final String PHOTO_WEB_URL = "";
+
     public static double getDimension(String fileURL)  {
         double dimension = 0.0;
         BufferedImage bimg;
@@ -51,7 +54,7 @@ public class Helper {
     }
 
 
-    public static void writeAvatars(InputStream uploadedInputStream, String uploadedFileLocation)throws IOException{
+    public static void writeFile(InputStream uploadedInputStream, String uploadedFileLocation)throws IOException{
         try(FileOutputStream out  = new FileOutputStream(uploadedFileLocation)) {
             int read = 0;
             byte[] bytes = new byte[1024];

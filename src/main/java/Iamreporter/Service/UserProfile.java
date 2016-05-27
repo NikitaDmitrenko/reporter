@@ -1,12 +1,11 @@
 package Iamreporter.Service;
 
-import Iamreporter.DB.UserDB;
-import Iamreporter.DB.UserNewsDB;
-import Iamreporter.Helper.Helper;
+import Iamreporter.DB.*;
 import Iamreporter.Model.User;
 import Iamreporter.Model.UserNews;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +23,9 @@ public class UserProfile {
 
     UserDB db = new UserDB();
     UserNewsDB userNewsDB = new UserNewsDB();
+    ViewsDb viewsDb = new ViewsDb();
+    LikesDB likesDB = new LikesDB();
+    CommentDB commentDB = new CommentDB();
 
 
     @PUT
@@ -42,7 +44,6 @@ public class UserProfile {
             db.updateUser(user);
         }
         return null;
-
     }
 
 
@@ -61,7 +62,7 @@ public class UserProfile {
             user.setAvatarURL(avatarURL);
             db.updateUser(user);
 
-            writeAvatars(uploadedInputStream, avatarLocation);
+            writeFile(uploadedInputStream, avatarLocation);
 
             jsonObject.put("user", true);
             jsonObject.put("uploadstatus", true);
@@ -77,7 +78,7 @@ public class UserProfile {
     @Path("/registration")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String createNewAccount(String json) {
+    public String createNewAccount(@PathParam("uuid")String uuid,String json) {
         JSONObject js = new JSONObject(json);
         JSONObject response = new JSONObject();
         String userName = js.getString("name");
@@ -89,14 +90,15 @@ public class UserProfile {
         if (password.equals(repassword)) {
             response.put("password", true);
             status = EmailValidator.isValidEmailAddress(email);
-            if (status) {
+            if (status && db.getUserByEmail(email)==null) {
                 User user = new User();
                 user.setName(userName);
                 user.setEmail(email);
                 user.setPassword(password);
-                user.setUserUUID(UUID());
+                user.setUserUUID(uuid);
                 user.setDate(UnixTime());
                 db.saveUser(user);
+                response.put("uuid",uuid);
                 response.put("email", true);
             } else {
                 response.put("email", false);
@@ -110,20 +112,19 @@ public class UserProfile {
 
 
     @GET
-    public String getUserProfile(@PathParam("userUUID")String userUUID){
+    @Path("/anotherUser/{name}/{surName}")
+    public String getUserProfile(@PathParam("userUUID")String userUUID, @PathParam("name")String name,@PathParam("surName")String surName){
         User user = db.getUserByUUID(userUUID);
         JSONObject jsonObject = new JSONObject();
+        User anotherUser = db.getUserByNameSurName(name, surName);
         if(user!=null) {
-           jsonObject.put("name",user.getName());
-            jsonObject.put("surName",user.getSurName());
-            jsonObject.put("callName",user.getCallName());
-            jsonObject.put("nickName",user.getNickName());
-            jsonObject.put("city",user.getCity());
-            jsonObject.put("email",user.getEmail());
-            jsonObject.put("mobilePhone",user.getEmail());
-            jsonObject.put("description",user.getDescription());
-            jsonObject.put("views",getUserViewsCount(userUUID));
-                
+            jsonObject.put("name",anotherUser.getName());
+            jsonObject.put("surName",anotherUser.getSurName());
+            jsonObject.put("nickName",anotherUser.getNickName());
+            jsonObject.put("city",anotherUser.getCity());
+            jsonObject.put("description",anotherUser.getDescription());
+            jsonObject.put("views",getUserViewsCount(anotherUser.getUserUUID()));
+            jsonObject.put("news",getUserNews(anotherUser.getUserUUID()));
         }
         return jsonObject.toString();
     }
@@ -137,4 +138,22 @@ public class UserProfile {
         return count;
     }
 
+    public String getUserNews(String userUUID){
+        List<UserNews> userNewsLIst = userNewsDB.getUserNews(userUUID);
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        JSONObject js;
+        for(UserNews news : userNewsLIst){
+            js = new JSONObject();
+            js.put("text",news.getText());
+            js.put("theme",news.getUserNewsTheme());
+            js.put("vievsCount",viewsDb.getUserNewsCountViews(news.getUuid()));
+            js.put("likes",likesDB.getNewsLikesCount(news.getUuid()));
+            js.put("comments",commentDB.getNewsCommentsCount(news.getUuid()));
+            js.put("date",news.getDate());
+            jsonArray.put(js);
+        }
+        jsonObject.put("news",jsonArray);
+        return jsonObject.toString();
+    }
 }
