@@ -45,7 +45,7 @@ public class ViewsDb {
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            count = ((Long)session.createQuery("select count (*) from Views where commentUUID =:uuid").setParameter("uuid",uuid).uniqueResult()).intValue();
+            count = ((Long)session.createQuery("select count (*) from Views where commentUUID  =:uuid").setParameter("uuid",uuid).uniqueResult()).intValue();
             session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){

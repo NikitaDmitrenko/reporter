@@ -1,4 +1,4 @@
-package Iamreporter.Service;
+package Iamreporter.ServicePack;
 
 import Iamreporter.DB.UserDB;
 import Iamreporter.Model.FacebookFriend;
@@ -43,7 +43,7 @@ public class InitUserService {
     }
 
     public static ArrayList<VkontakteFriend> getVkontkteFriends(JSONObject js){
-        JSONArray jsonGoogleFriends = js.getJSONArray("googleFriends");
+        JSONArray jsonGoogleFriends = js.getJSONArray("vkontakteFriends");
         ArrayList<VkontakteFriend> VkontakteFriends = new ArrayList<>();
         Gson gson = new Gson();
         for(int i = 0;i<jsonGoogleFriends.length();i++){

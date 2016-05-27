@@ -32,6 +32,10 @@ public class MediaFile {
     @Column(name = "SMALL_PHOTO_URL")
     private String smallPhotoURL;
 
+    @Column(name = "USER_UUID")
+    private String userUUID;
+
+
     @Column(name = "DATE")
     private long date;
 
@@ -93,5 +97,13 @@ public class MediaFile {
 
     public void setNewsUUID(String newsUUID) {
         this.newsUUID = newsUUID;
+    }
+
+    public String getUserUUID() {
+        return userUUID;
+    }
+
+    public void setUserUUID(String userUUID) {
+        this.userUUID = userUUID;
     }
 }

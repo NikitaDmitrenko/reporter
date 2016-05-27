@@ -2,6 +2,7 @@ package Iamreporter.Service;
 
 import Iamreporter.DB.UserDB;
 import Iamreporter.Model.User;
+import Iamreporter.ServicePack.InitUserService;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Component
-@Path("/messages")
+@Path("/social")
 @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
 public class SocialRegistrationResource {
