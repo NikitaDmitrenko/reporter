@@ -11,22 +11,6 @@
         </webroots>
       </configuration>
     </facet>
-    <facet type="Spring" name="Spring">
-      <configuration>
-        <fileset id="fileset" name="Spring Application Context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/java/Tripod/SpringBoot/JerseyConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/Tripod/SpringBoot/Main.java</file>
-          <file>jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring3/2.21/jersey-spring3-2.21.jar!/jersey-spring-applicationContext.xml</file>
-          <file>file://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring3/2.21/jersey-spring3-2.21.jar</file>
-        </fileset>
-        <fileset id="fileset2" name="Spring Application Context (2)" removed="false">
-          <file>file://$MODULE_DIR$/src/main/java/Iamreporter/SpringBoot/JerseyConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/Iamreporter/SpringBoot/Main.java</file>
-          <file>jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring3/2.21/jersey-spring3-2.21.jar!/jersey-spring-applicationContext.xml</file>
-          <file>file://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring3/2.21/jersey-spring3-2.21.jar</file>
-        </fileset>
-      </configuration>
-    </facet>
     <facet type="hibernate" name="Hibernate">
       <configuration>
         <datasource-map>
@@ -34,6 +18,16 @@
         </datasource-map>
         <naming-strategy-map />
         <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/main/resources/hibernate.cfg.xml" />
+      </configuration>
+    </facet>
+    <facet type="Spring" name="Spring">
+      <configuration>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/java/Iamreporter/SpringBoot/JerseyConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/Iamreporter/SpringBoot/Main.java</file>
+          <file>jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring3/2.21/jersey-spring3-2.21.jar!/jersey-spring-applicationContext.xml</file>
+          <file>file://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring3/2.21/jersey-spring3-2.21.jar</file>
+        </fileset>
       </configuration>
     </facet>
   </component>

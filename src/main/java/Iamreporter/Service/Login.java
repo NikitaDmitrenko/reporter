@@ -7,6 +7,8 @@ import Iamreporter.Model.User;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -56,7 +58,7 @@ public class Login {
         boolean status;
         if (password.equals(repassword)) {
             response.put("password", true);
-            status = EmailValidator.isValidEmailAddress(email);
+            status = isValidEmailAddress(email);
             if (status && userDB.getUserByEmail(email)==null) {
                 final String privateUUID  = Helper.UUID();
                 final String publicUUID = Helper.UUID();
@@ -69,6 +71,14 @@ public class Login {
                 user.setPrivateUUID(privateUUID);
                 user.setPublicUUID(publicUUID);
                 user.setDate(UnixTime());
+                user.setCallName("");
+                user.setCity("");
+                user.setAvatarURL("");
+                user.setDescription("");
+                user.setMobilePhone("");
+                user.setFacebookId("");
+                user.setVkId("");
+                user.setTwitterId("");
 
                 userDB.saveUser(user);
 
@@ -82,6 +92,17 @@ public class Login {
             response.put("password", false);
         }
         return response.toString();
+    }
+
+    public static boolean isValidEmailAddress(String email) {
+        boolean result = true;
+        try {
+            InternetAddress emailAddr = new InternetAddress(email);
+            emailAddr.validate();
+        } catch (AddressException ex) {
+            result = false;
+        }
+        return result;
     }
 
 }

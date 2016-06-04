@@ -13,7 +13,7 @@ public class ViewsDb {
                 Session session = HibernateUtil.getSessionFactory().getCurrentSession();
                 transaction = session.beginTransaction();
                 session.save(views);
-                transaction.commit();
+                session.getTransaction().commit();
             }catch (RuntimeException e){
                 if(transaction!=null){
                     transaction.rollback();
@@ -21,41 +21,5 @@ public class ViewsDb {
                 e.printStackTrace();
             }
     }
-
-    public int getUserNewsCountViews(String uuid){
-        Transaction transaction = null;
-        int count = 0;
-        try{
-            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-            transaction = session.beginTransaction();
-            count = ((Long)session.createQuery("select count (*) from Views where newsUUID =:uuid").setParameter("uuid",uuid).uniqueResult()).intValue();
-            session.getTransaction().commit();
-        }catch (RuntimeException e){
-            if(transaction!=null){
-               transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return count;
-    }
-
-    public int commentsCount(String uuid){
-        Transaction transaction = null;
-        int count = 0;
-        try{
-            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-            transaction = session.beginTransaction();
-            count = ((Long)session.createQuery("select count (*) from Views where commentUUID  =:uuid").setParameter("uuid",uuid).uniqueResult()).intValue();
-            session.getTransaction().commit();
-        }catch (RuntimeException e){
-            if(transaction!=null){
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return count;
-    }
-
-
 
 }

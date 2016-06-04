@@ -31,9 +31,6 @@ public class UserNews {
     @Column(name = "NAME_SURNAME")
     private String nameSurName;
 
-    @Column(name = "EMAIL")
-    private String email;
-
     @Column(name = "NEWS_CATEGORIES")
     private Integer categories;
 
@@ -45,6 +42,28 @@ public class UserNews {
 
     @Column(name = "DATE")
     private long date;
+
+    @Column(name = "ANON")
+    private boolean anonyomous;
+
+    @Column(name = "VIEWS_COUNT")
+    private long countViews;
+
+    public long getCountViews() {
+        return countViews;
+    }
+
+    public void setCountViews(long count) {
+        this.countViews = count;
+    }
+
+    public boolean isAnonyomous() {
+        return anonyomous;
+    }
+
+    public void setAnonyomous(boolean anonyomous) {
+        this.anonyomous = anonyomous;
+    }
 
     public long getDate() {
         return date;
@@ -118,11 +137,8 @@ public class UserNews {
         this.nameSurName = nameSurName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public UserNews incrementAndGet(){
+        this.countViews = this.getCountViews()+1;
+        return this;
     }
 }

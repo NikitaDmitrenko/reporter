@@ -49,9 +49,9 @@ public class InitUserService {
     }
 
     public User setUserData(User user,String name){
-        user.setNickName(name);
         user.setPrivateUUID(UUID());
         user.setPublicUUID(UUID());
+        user.setName(name);
         userDB.saveUser(user);
         return user;
     }

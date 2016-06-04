@@ -24,13 +24,13 @@ public class UserDB {
         }
     }
 
-    public List<User> getUsers(){
+    public List<User> getUsers(String privateUserUUID){
         Transaction transaction = null;
         List<User> users = null;
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            users = (List<User>)session.createQuery("from User").setMaxResults(50).list();
+            users = (List<User>)session.createQuery("from User where privateUUID != :privateUUID").setParameter("privateUUID",privateUserUUID).list();
             transaction.commit();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -65,24 +65,7 @@ public class UserDB {
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            user = (User)session.createQuery("from User where publicUUID = :publicUUID").setParameter("publicUUID", publicUUID).uniqueResult();
-            transaction.commit();
-        }catch (RuntimeException e){
-            if(transaction!=null){
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return user;
-    }
-
-    public User getUserByNameSurName(String name,String surName){
-        Transaction transaction = null;
-        User user = null;
-        try{
-            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-            transaction = session.beginTransaction();
-            user = (User)session.createQuery("from User where name = :name and surName = :surName").setParameter("name", name).setParameter("surName",surName).uniqueResult();
+            user = (User)session.createQuery("from User where publicUUID=:publicUUID").setParameter("publicUUID", publicUUID).uniqueResult();
             session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -92,6 +75,7 @@ public class UserDB {
         }
         return user;
     }
+
 
     public void updateUser(User user){
         Transaction transaction = null;
@@ -128,7 +112,7 @@ public class UserDB {
     public User getUserByEmailPassword(String email,String password){
         Transaction transaction = null;
         User user = null;
-
+        System.out.println();
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();

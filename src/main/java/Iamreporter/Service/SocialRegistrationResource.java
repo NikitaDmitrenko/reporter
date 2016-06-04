@@ -1,9 +1,6 @@
 package Iamreporter.Service;
 
-import Iamreporter.DB.UserDB;
-import Iamreporter.Model.User;
 import Iamreporter.ServicePack.InitUserService;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;

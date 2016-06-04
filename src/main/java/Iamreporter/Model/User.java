@@ -117,14 +117,6 @@ public class User {
         this.id = id;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
     public String getAvatarURL() {
         return avatarURL;
     }
@@ -189,4 +181,24 @@ public class User {
         this.twitterId = twitterId;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", avatarURL='" + avatarURL + '\'' +
+                ", callName='" + callName + '\'' +
+                ", mobilePhone='" + mobilePhone + '\'' +
+                ", city='" + city + '\'' +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                ", privateUUID='" + privateUUID + '\'' +
+                ", email='" + email + '\'' +
+                ", publicUUID='" + publicUUID + '\'' +
+                ", password='" + password + '\'' +
+                ", vkId='" + vkId + '\'' +
+                ", facebookId='" + facebookId + '\'' +
+                ", twitterId='" + twitterId + '\'' +
+                '}';
+    }
 }

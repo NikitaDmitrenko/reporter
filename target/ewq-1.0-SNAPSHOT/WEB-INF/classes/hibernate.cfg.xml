@@ -25,6 +25,7 @@
         <mapping class="Iamreporter.Model.Views"/>
         <mapping class="Iamreporter.Model.LikeNews"/>
         <mapping class="Iamreporter.Model.Comment"/>
+        <mapping class="Iamreporter.Model.FriendRelation"/>
     </session-factory>
 </hibernate-configuration>
 

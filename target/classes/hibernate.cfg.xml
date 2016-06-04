@@ -25,10 +25,7 @@
         <mapping class="Iamreporter.Model.Views"/>
         <mapping class="Iamreporter.Model.LikeNews"/>
         <mapping class="Iamreporter.Model.Comment"/>
-        <mapping class="Iamreporter.Model.VkontakteFriend"/>
-        <mapping class="Iamreporter.Model.TwitterFriend"/>
-        <mapping class="Iamreporter.Model.FacebookFriend"/>
-        <mapping class="Iamreporter.Model.Subscribers"/>
+        <mapping class="Iamreporter.Model.FriendRelation"/>
     </session-factory>
 </hibernate-configuration>
 

@@ -35,10 +35,8 @@ public class MediaFile {
     @Column(name = "USER_UUID")
     private String userUUID;
 
-
     @Column(name = "DATE")
     private long date;
-
 
     public MediaFile() {
     }

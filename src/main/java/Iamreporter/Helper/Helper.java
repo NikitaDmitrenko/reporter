@@ -1,12 +1,15 @@
 package Iamreporter.Helper;
 
+import Iamreporter.Service.UserNewsService;
+import org.apache.commons.io.FilenameUtils;
+
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.UUID;
+import java.util.zip.ZipInputStream;
 
 import static java.lang.Math.*;
 
@@ -21,23 +24,22 @@ public class Helper {
         return UUID.randomUUID().toString();
     }
 
-    public static final String BIG_PHOLDER = "D:\\";
+    public static final String ARCHIVE_LOCATION = "D:\\";
+    public static final String ARCHIVE_URL = "http://server.tripodapp.com:8080/images/archive/";
 
-    public static final String SMALL_PHOLDER = "C:\\";
+    public static final String VIDEO_FILE_URL = "http://server.tripodapp.com:8080/images/video/";
+    public static final String VIDEO_FILE_LOCATION = "D:\\";
 
-    public static final String WEB_URL = "";
+    public static final String BIG_PHOTO_LOCATION ="D:\\";
+    public static final String BIG_PHOTO_URL = "http://server.tripodapp.com:8080/images/bigphotourl/";
 
-    public static final String USER_BIG_PHOTO_URL = "http://server.tripodapp.com:8080/images/userbigPhoto/";
-    public static final String USER_SMALL_PHOTO_URL = "http://server.tripodapp.com:8080/images/usersmallPhoto/";
+    public static final String SMALL_PHOTO_LOCATION = "C:\\";
+    public static final String SMALL_PHOTO_URL = "http://server.tripodapp.com:8080/images/smallphotourl/";
 
-    public static final String USER_BIG_PHOTO_LOCATION = "/opt/tomcat/webapps/ROOT/images/userbigPhoto/";
-    public static final String USER_SMALL_PHOTO_LOCATION = "/opt/tomcat/webapps/ROOT/images/usersmallPhoto/";
-
-    public static final String AVATARS_LOCATION = "/opt/tomcat/webapps/ROOT/images/avatars/";
+    public static final String AVATARS_LOCATION = "D:\\";
     public static final String AVATARS_URL = "http://server.tripodapp.com:8080/images/avatars/";
 
-    public static final String MEDIA_FILE_LOCATION = "";
-    public static final String MEDIA_FILE_URL = "";
+    public static final String GOOGLE_MAPS = "https://maps.googleapis.com/maps/api/geocode/json?latlng=latitude,longitude&key=AIzaSyCnzsWY6u5anRnUgwGJOZ2Bqa72buIaNv8";
 
     public static double getDimension(String fileURL)  {
         double dimension = 0.0;
@@ -53,6 +55,19 @@ public class Helper {
         return  round(dimension * 100.0)/100.0;
     }
 
+    public static void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
+        byte[] bytesIn = new byte[4096];
+        int read = 0;
+        while ((read = zipIn.read(bytesIn)) != -1) {
+            bos.write(bytesIn, 0, read);
+        }
+        bos.close();
+        String ext = FilenameUtils.getExtension(filePath);
+        if(ext.equalsIgnoreCase("jpg")||ext.equalsIgnoreCase("png")||ext.equalsIgnoreCase("jpeg")||ext.equalsIgnoreCase("gif")){
+            resizeImage(filePath);
+        }
+    }
 
     public static void writeFile(InputStream uploadedInputStream, String uploadedFileLocation)throws IOException{
         try(FileOutputStream out  = new FileOutputStream(uploadedFileLocation)) {
@@ -67,6 +82,61 @@ public class Helper {
 
     }
 
+    public static void resizeImage(String uploadedFileLocation) throws IOException{
+        BufferedImage image = ImageIO.read(new File(uploadedFileLocation));
 
+        String smallFileLocation = uploadedFileLocation.replace(BIG_PHOTO_LOCATION,SMALL_PHOTO_LOCATION);
+
+        int type = image.getType() == 0? BufferedImage.TYPE_INT_ARGB : image.getType();
+
+        BufferedImage smallImage;
+        BufferedImage resizedImage;
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        int smallWidth;
+        int smallHeight;
+
+        double percent;
+        if(width>=2100 || height>=2100) {
+            if (width > height) {
+
+                percent = width / 2100;
+                width /= percent;
+                height /= percent;
+                smallWidth = width/2;
+                smallHeight = height/2;
+
+                resizedImage = resize(image, width, height, type);
+                ImageIO.write(resizedImage, UserNewsService.getFileExtension(uploadedFileLocation), new File(uploadedFileLocation));
+                smallImage = resize(image,smallWidth,smallHeight,type);
+                ImageIO.write(smallImage, UserNewsService.getFileExtension(uploadedFileLocation),new File(smallFileLocation));
+            } else {
+
+                percent = height / 2100;
+                width /= percent;
+                height /= percent;
+                smallWidth = width/2;
+                smallHeight = height/2;
+                resizedImage = resize(image, width, height, type);
+                ImageIO.write(resizedImage,UserNewsService.getFileExtension(uploadedFileLocation), new File(uploadedFileLocation));
+                smallImage = resize(image,smallWidth,smallHeight,type);
+                ImageIO.write(smallImage,UserNewsService.getFileExtension(uploadedFileLocation),new File(smallFileLocation));
+            }
+        }
+        smallWidth = width/2;
+        smallHeight = height/2;
+        smallImage = resize(image,smallWidth,smallHeight,type);
+        ImageIO.write(smallImage,UserNewsService.getFileExtension(uploadedFileLocation),new File(smallFileLocation));
+    }
+
+    private static BufferedImage resize(BufferedImage originalImage,int width,int height, int type){
+        BufferedImage resizedImage = new BufferedImage(width, height, type);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, width, height, null);
+        g.dispose();
+        return resizedImage;
+    }
 
 }

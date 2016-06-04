@@ -52,7 +52,7 @@ public class UserNewsDB {
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            userNewsUUIDS = session.createQuery("select uuid from UserNews where authorUUID =:authorUUID").list();
+            userNewsUUIDS = (List<String>) session.createQuery("select uuid from UserNews uuid  where authorUUID =:authorUUID").setParameter("authorUUID",authorUUID).list();
             session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -87,6 +87,7 @@ public class UserNewsDB {
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
             userNews = (List<UserNews>)session.createQuery("from UserNews where authorUUID =:userUUID order by date desc ").setParameter("userUUID",userUUID).list();
+            System.out.println(userNews.size());
             session.beginTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -95,6 +96,73 @@ public class UserNewsDB {
             e.printStackTrace();
         }
         return userNews;
+    }
+
+
+    public List<UserNews> getTopNews(){
+        Transaction transaction = null;
+        List<UserNews> topNews = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            topNews = (List<UserNews>)session.createQuery("from UserNews order by countViews desc").list();
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                e.printStackTrace();
+            }
+
+        }
+        return topNews;
+    }
+
+    public void update(UserNews userNews){
+        Transaction transaction = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            session.update(userNews);
+            transaction.commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public int getUserNewsCount(String authorUUID){
+        int count = 0;
+        Transaction transaction = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            count = ((Long)session.createQuery("select count(*) from UserNews where authorUUID =:authorUUID").setParameter("authorUUID",authorUUID).uniqueResult()).intValue();
+            transaction.commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    public int getUserNewsViewsCount(String authorUUID){
+        int count = 0;
+        Transaction transaction = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            count = ((Long)session.createQuery("select sum(countViews) from UserNews where authorUUID =:authorUUID").setParameter("authorUUID",authorUUID).uniqueResult()).intValue();
+            transaction.commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return count;
     }
 
 }
