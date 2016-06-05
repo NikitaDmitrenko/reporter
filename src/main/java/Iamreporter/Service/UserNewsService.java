@@ -6,6 +6,7 @@ import Iamreporter.ServicePack.Service;
 import org.apache.commons.io.FilenameUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 
@@ -56,18 +57,38 @@ public class UserNewsService {
     @Produces(MediaType.APPLICATION_JSON)
     public String getNewsByUUID(@PathParam("newsUUID")String uuid,@Context HttpServletRequest request){
         saveNewsView(uuid,request);
-
         return service.getNewsDate(uuid);
     }
 
+    @POST
+    @Path("/{newsUUID}/likePhoto")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String likeNewsByUUID(@PathParam("userUUID")String userUUID,@PathParam("newsUUID")String newsUUID){
+        return service.likePhoto(userUUID, newsUUID).toString();
+    }
+
+    @POST
+    @Path("/{newsUUID}/commentPhoto")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String commentPNewsByUUID(@PathParam("userUUID")String userUUID,@PathParam("newsUUID")String uuid,String json){
+        JSONObject jsonObject = new JSONObject(json);
+        String text = jsonObject.getString("text");
+        String commentUUID;
+        if(jsonObject.has("commentUUID")){
+          commentUUID = jsonObject.getString("commentUUID");
+        }
+
+
+        return null;
+    }
+
+
     public void unzipMediaFiles(String userUUID, String zipFilePath, String newsUUID) throws IOException {
-
         ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath), Charset.forName("Cp1251"));
-
         ZipEntry entry = zipIn.getNextEntry();
-
         while (entry != null) {
-
             String ext = getFileExtension(entry.getName());
             String filePath = "";
             if(!ext.equals("")&&(ext.equalsIgnoreCase("jpg")||ext.equalsIgnoreCase("png")||ext.equalsIgnoreCase("jpeg")||ext.equalsIgnoreCase("gif"))) {

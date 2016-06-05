@@ -22,7 +22,6 @@ public class AllReporter {
 
     UserDB userDB = new UserDB();
     UserNewsDB userNewsDB = new UserNewsDB();
-    ViewsDb viewsDb = new ViewsDb();
 
     @GET
     @Path("/readers/{step: \\d}")
@@ -66,10 +65,11 @@ public class AllReporter {
                 jsonObject1.put("name",user.getName());
                 jsonObject1.put("avatarURL",user.getAvatarURL());
                 jsonObject1.put("description",user.getDescription());
-                jsonObject1.put("city",user.getCity());
-                jsonObject1.put("vievs",userNewsDB.getUserNewsViewsCount(user.getPrivateUUID()));
-                jsonObject1.put("newsCount",userNewsDB.getUserNewsCount(user.getPrivateUUID()));
                 jsonObject1.put("publicUUID",user.getPublicUUID());
+                jsonObject1.put("city",user.getCity());
+                jsonObject1.put("vievs", userNewsDB.getUserNewsViewsCount(user.getPrivateUUID()));
+                jsonObject1.put("newsCount",userNewsDB.getUserNewsCount(user.getPrivateUUID()));
+
                 jsonArray.put(jsonObject1);
             }
         }

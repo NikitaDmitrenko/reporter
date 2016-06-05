@@ -22,7 +22,6 @@ import static Iamreporter.Helper.Helper.*;
 @Component
 public class UserProfile {
 
-    LikesDB likesDB = new LikesDB();
     Service service = new Service();
     UserNewsDB userNewsDB = new UserNewsDB();
     UserDB db = new UserDB();
@@ -122,6 +121,7 @@ public class UserProfile {
             jsonObject.put("city",anotherUser.getCity());
             jsonObject.put("views",userNewsDB.getUserNewsViewsCount(anotherUser.getPrivateUUID()));
             jsonObject.put("publicUUID",publicUserUUID);
+            jsonObject.put("description",anotherUser.getDescription());
             jsonObject.put("views",userNewsDB.getUserNewsViewsCount(anotherUser.getPrivateUUID()));
             jsonObject.put("subscribers",friendRelationDB.getUserSubbscribersCount(anotherUser.getPrivateUUID()));
             jsonObject.put("news",getUserNews(anotherUser.getPrivateUUID()));

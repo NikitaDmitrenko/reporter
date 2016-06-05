@@ -21,5 +21,4 @@ public class ViewsDb {
                 e.printStackTrace();
             }
     }
-
 }

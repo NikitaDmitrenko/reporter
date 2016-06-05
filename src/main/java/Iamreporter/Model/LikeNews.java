@@ -20,23 +20,12 @@ public class LikeNews {
     private String newsUUID;
 
     @Column(name = "USER_LIKE")
-    private boolean like;
+    private boolean status;
 
     @Column(name = "USER_UUID")
     private String userUUID;
 
-    @Column(name = "COMMENT_UUID")
-    private String commentUUID;
-
     public LikeNews() {
-    }
-
-    public String getCommentUUID() {
-        return commentUUID;
-    }
-
-    public void setCommentUUID(String commentUUID) {
-        this.commentUUID = commentUUID;
     }
 
     public Long getId() {
@@ -55,12 +44,12 @@ public class LikeNews {
         this.newsUUID = newsUUID;
     }
 
-    public boolean isLike() {
-        return like;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setLike(boolean like) {
-        this.like = like;
+    public void setStatus(boolean like) {
+        this.status = like;
     }
 
     public String getUserUUID() {
@@ -69,5 +58,24 @@ public class LikeNews {
 
     public void setUserUUID(String userUUID) {
         this.userUUID = userUUID;
+    }
+
+    public LikeNews changeStatus(){
+        if(this.status){
+            this.status = false;
+        }else{
+            this.status = true;
+        }
+        return this;
+    }
+
+    public int getDigitalStatus(){
+        int status = 0;
+        if(this.status){
+            status = 1;
+        }else{
+            status = 0;
+        }
+        return status;
     }
 }

@@ -246,4 +246,23 @@ public class UserNewsDB {
         return sportNews;
     }
 
+    public List<UserNews> getAllNews(){
+        Transaction transaction = null;
+        List<UserNews> allNews = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            allNews = (List<UserNews>)session.createQuery("from UserNews").setMaxResults(500).list();
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return allNews;
+    }
+
+
+
 }

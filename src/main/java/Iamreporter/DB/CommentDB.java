@@ -7,9 +7,7 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
-/**
- * Created by Nikita on 23.05.2016.
- */
+
 public class CommentDB {
 
     public List<Comment> getCOmmentByNewsUUID(String uuid){

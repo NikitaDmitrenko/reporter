@@ -205,6 +205,7 @@ public class Service {
             js.put("text",userNews.getText());
             js.put("theme",userNews.getUserNewsTheme());
             js.put("date",userNews.getDate());
+            js.put("newsUUID",userNews.getUuid());
             if(!newsPhotos.isEmpty()) {
                 MediaFile mediaFile1 = getPhotoFile(newsPhotos);
                 if(mediaFile1!=null) {
@@ -243,6 +244,41 @@ public class Service {
             }
         }
         return mediaFile;
+    }
+
+    public JSONObject likePhoto(String userUUID,String newsUUID){
+        User user = db.getUserByPrivateUUID(userUUID);
+        UserNews userNews =  userNewsDB.getNewsByUUID(newsUUID);
+        JSONObject jsonObject = new JSONObject();
+        LikeNews likeNews;
+        int status = 0 ;
+        if(user!=null && userNews!=null) {
+             likeNews = likeDB.getUserLikeFromUserNews(user, userNews);
+            if (likeNews == null) {
+                likeNews = new LikeNews();
+                likeNews.setNewsUUID(userNews.getUuid());
+                likeNews.setUserUUID(user.getPrivateUUID());
+                likeNews.setStatus(true);
+                likeDB.saveLike(likeNews);
+                status = likeNews.getDigitalStatus();
+            } else {
+                likeNews.changeStatus();
+                likeDB.update(likeNews);
+                status = likeNews.getDigitalStatus();
+            }
+        }
+        jsonObject.put("status",status);
+        jsonObject.put("likesCount",likeDB.getNewsLikesCount(newsUUID));
+        return jsonObject;
+    }
+
+
+    public void startCommentActivity(String newsUUID,String userUUID,String text){
+
+    }
+
+    public void startCommentActivity(String newsUUID,String userUUID,String text,String commentUUID){
+
     }
 
 }
