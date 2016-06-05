@@ -41,7 +41,7 @@ public class Service {
         double longitude = jsonObject.getDouble("longitude");
 
         news.setUserNewsTheme(jsonObject.getString("theme"));
-        news.setCategories(jsonObject.getInt("tag"));
+        news.setCategory(jsonObject.getInt("tag"));
         news.setText(jsonObject.getString("text"));
         news.setAuthorUUID(user.getPrivateUUID());
         news.setDate(UnixTime());
@@ -64,7 +64,7 @@ public class Service {
 
         if(userNews!=null){
             User user = db.getUserByPrivateUUID(userNews.getAuthorUUID());
-            jsonObject.put("category",userNews.getCategories());
+            jsonObject.put("category",userNews.getCategory());
             jsonObject.put("theme",userNews.getUserNewsTheme());
             jsonObject.put("text",userNews.getText());
             jsonObject.put("date",userNews.getDate());
@@ -182,9 +182,9 @@ public class Service {
     }
 
     public JSONObject getTopNews(int step){
-        List<UserNews> famousUsers = userNewsDB.getTopNews();
-        famousUsers = getUniqueNews(famousUsers, step * 30, (step + 1) * 30);
-        return shiftNewses(famousUsers);
+        List<UserNews> topNews = userNewsDB.getTopNews();
+        topNews = getUniqueNews(topNews, step * 30, (step + 1) * 30);
+        return shiftNewses(topNews);
     }
 
 
@@ -201,15 +201,12 @@ public class Service {
         JSONObject js ;
         for (UserNews userNews : userList) {
             js = new JSONObject();
-            List<MediaFile> mediaFile = mediaFileDB.getFirstNewsPhoto(userNews.getUuid());
-            js.put("tag",userNews.getCategories());
+            List<MediaFile> newsPhotos = mediaFileDB.getNewsPhotos(userNews.getUuid());
             js.put("text",userNews.getText());
             js.put("theme",userNews.getUserNewsTheme());
             js.put("date",userNews.getDate());
-            js.put("likesCount",likeDB.getNewsLikesCount(userNews.getUuid()));
-            js.put("commentsCount",commentDB.getNewsCommentsCount(userNews.getUuid()));
-            if(!mediaFile.isEmpty()) {
-                MediaFile mediaFile1 = getPhotoFile(mediaFile);
+            if(!newsPhotos.isEmpty()) {
+                MediaFile mediaFile1 = getPhotoFile(newsPhotos);
                 if(mediaFile1!=null) {
                     js.put("bigPhotoURL", mediaFile1.getPhotoURL());
                     js.put("smallPhotoURL", mediaFile1.getSmallPhotoURL());

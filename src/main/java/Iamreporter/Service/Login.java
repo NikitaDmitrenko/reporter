@@ -71,11 +71,9 @@ public class Login {
                 user.setPrivateUUID(privateUUID);
                 user.setPublicUUID(publicUUID);
                 user.setDate(UnixTime());
-                user.setCallName("");
                 user.setCity("");
                 user.setAvatarURL("");
                 user.setDescription("");
-                user.setMobilePhone("");
                 user.setFacebookId("");
                 user.setVkId("");
                 user.setTwitterId("");

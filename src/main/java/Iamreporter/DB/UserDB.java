@@ -24,14 +24,19 @@ public class UserDB {
         }
     }
 
-    public List<User> getUsers(String privateUserUUID){
+    public List<User> getMySubscribers(String userWhomAddUUID){
         Transaction transaction = null;
         List<User> users = null;
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            users = (List<User>)session.createQuery("from User where privateUUID != :privateUUID").setParameter("privateUUID",privateUserUUID).list();
-            transaction.commit();
+            users = (List<User>)session.createQuery("from User" +
+                    " where privateUUID in " +
+                    "(select userWhoAddUUID from FriendRelation" +
+                    " where userWhomAddUUID =:userWhomAddUUID" +
+                    " and " +
+                    "status =:status)").setParameter("userWhomAddUUID",userWhomAddUUID).setParameter("status","subscribe").list();
+            session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
                 transaction.rollback();
@@ -39,7 +44,45 @@ public class UserDB {
             e.printStackTrace();
         }
         return users;
+    }
 
+    public List<User> getAllReporters(String userUUID){
+        Transaction transaction = null;
+        List<User> users = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            users = (List<User>)session.createQuery("from User where privateUUID !=:privateUUID ").setParameter("privateUUID",userUUID);
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    public List<User> getMyReaders(String userWhoAddUUID){
+        Transaction transaction = null;
+        List<User> users = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            users = (List<User>)session.createQuery("from User" +
+                    " where privateUUID in " +
+                    "(select userWhomAddUUID from FriendRelation" +
+                    " where userWhoAddUUID =:userWhoAddUUID" +
+                    " and " +
+                    "status =:status)").setParameter("userWhoAddUUID",userWhoAddUUID).setParameter("status","subscribe").list();
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return users;
     }
 
     public User getUserByPrivateUUID(String privateUUID){
@@ -112,7 +155,6 @@ public class UserDB {
     public User getUserByEmailPassword(String email,String password){
         Transaction transaction = null;
         User user = null;
-        System.out.println();
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
@@ -130,7 +172,6 @@ public class UserDB {
     public User getUserByFacebookId(String facebookid){
         Transaction transaction = null;
         User user = null;
-
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
@@ -147,7 +188,6 @@ public class UserDB {
     public User getUserByVkId(String vkId){
         Transaction transaction = null;
         User user = null;
-
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
@@ -164,7 +204,6 @@ public class UserDB {
     public User getUserByTwitterId(String twitterId){
         Transaction transaction = null;
         User user = null;
-
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();

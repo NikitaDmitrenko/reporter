@@ -32,7 +32,7 @@ public class UserNews {
     private String nameSurName;
 
     @Column(name = "NEWS_CATEGORIES")
-    private Integer categories;
+    private Integer category;
 
     @Column(name = "NEWS_UUID")
     private String uuid;
@@ -89,12 +89,12 @@ public class UserNews {
         this.uuid = uuid;
     }
 
-    public Integer getCategories() {
-        return categories;
+    public Integer getCategory() {
+        return category;
     }
 
-    public void setCategories(Integer categories) {
-        this.categories = categories;
+    public void setCategory(Integer categories) {
+        this.category = categories;
     }
 
     public int getId() {

@@ -8,9 +8,6 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
-/**
- * Created by Nikita on 21.05.2016.
- */
 public class UserNewsDB {
 
     public void saveUserNews(UserNews userNews){
@@ -48,7 +45,6 @@ public class UserNewsDB {
     public List<String> getUserNewsUUIDS(String authorUUID){
         Transaction transaction = null;
         List<String> userNewsUUIDS = null;
-
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
@@ -87,7 +83,6 @@ public class UserNewsDB {
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
             userNews = (List<UserNews>)session.createQuery("from UserNews where authorUUID =:userUUID order by date desc ").setParameter("userUUID",userUUID).list();
-            System.out.println(userNews.size());
             session.beginTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -163,6 +158,92 @@ public class UserNewsDB {
             e.printStackTrace();
         }
         return count;
+    }
+
+
+    public List<UserNews> getSportNews(){
+        Transaction transaction = null;
+        List<UserNews> sportNews = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            sportNews = (List<UserNews>)session.createQuery("from UserNews where category =:category").setParameter("category",104).list();
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return sportNews;
+    }
+
+    public List<UserNews> getPoliticNews(){
+        Transaction transaction = null;
+        List<UserNews> sportNews = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            sportNews = (List<UserNews>)session.createQuery("from UserNews where category =:category").setParameter("category",101).list();
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return sportNews;
+    }
+
+    public List<UserNews> getLifeNews(){
+        Transaction transaction = null;
+        List<UserNews> sportNews = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            sportNews = (List<UserNews>)session.createQuery("from UserNews where category =:category").setParameter("category",102).list();
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return sportNews;
+    }
+
+    public List<UserNews> getHumourNews(){
+        Transaction transaction = null;
+        List<UserNews> sportNews = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            sportNews = (List<UserNews>)session.createQuery("from UserNews where category =:category").setParameter("category",103).list();
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return sportNews;
+    }
+
+    public List<UserNews> getAnotherNews(){
+        Transaction transaction = null;
+        List<UserNews> sportNews = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            sportNews = (List<UserNews>)session.createQuery("from UserNews where category =:category").setParameter("category",105).list();
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return sportNews;
     }
 
 }

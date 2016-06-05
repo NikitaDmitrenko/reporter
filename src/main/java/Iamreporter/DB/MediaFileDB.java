@@ -25,7 +25,7 @@ public class MediaFileDB {
         }
     }
 
-    public List<MediaFile> getFirstNewsPhoto(String userNewsUUID){
+    public List<MediaFile> getNewsPhotos(String userNewsUUID){
         Transaction transaction = null;
         List<MediaFile> mediaFiles  = null;
         try{

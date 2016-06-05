@@ -12,7 +12,6 @@ public class FriendRelationDB {
     public FriendRelation getFriendRelation(String userWhoAddUUID,String userWhomAddUUID){
         Transaction transaction = null;
         FriendRelation friendRelation = null;
-        System.out.println();
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
@@ -60,4 +59,20 @@ public class FriendRelationDB {
         }
     }
 
+    public int getUserSubbscribersCount(String userPrivateUUID){
+        Transaction transaction = null;
+        int count = 0;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            count = ((Long)session.createQuery("select count (*) from FriendRelation where userWhomAddUUID =:userprivateUUID and status =:status").setParameter("userprivateUUID",userPrivateUUID).setParameter("status","subscribe").uniqueResult()).intValue();
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return count;
+    }
 }

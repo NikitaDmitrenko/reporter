@@ -26,13 +26,6 @@ public class User {
 
     @Column(name = "AVATAR_URL")
     private String avatarURL;
-
-    @Column(name = "CALL_NAME")
-    private String callName;
-
-    @Column(name = "MOBILE_PHONE")
-    private String mobilePhone;
-
     @Column(name = "CITY")
     private String city;
 
@@ -124,23 +117,6 @@ public class User {
     public void setAvatarURL(String avatarURL) {
         this.avatarURL = avatarURL;
     }
-
-    public String getCallName() {
-        return callName;
-    }
-
-    public void setCallName(String callName) {
-        this.callName = callName;
-    }
-
-    public String getMobilePhone() {
-        return mobilePhone;
-    }
-
-    public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
-    }
-
     public String getCity() {
         return city;
     }
@@ -187,8 +163,7 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", avatarURL='" + avatarURL + '\'' +
-                ", callName='" + callName + '\'' +
-                ", mobilePhone='" + mobilePhone + '\'' +
+                ", callName='" +  + '\'' +
                 ", city='" + city + '\'' +
                 ", description='" + description + '\'' +
                 ", date=" + date +
