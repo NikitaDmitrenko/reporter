@@ -33,7 +33,7 @@ public class AllReporter {
 
     @GET
     @Path("/subscribers/{step: \\d}")
-    public String getReporters(@PathParam("privaateUserUUID")String privateUUID,@PathParam("step")int step){
+    public String getReporters(@PathParam("privateUserUUID")String privateUUID,@PathParam("step")int step){
         List<User> famousUsers = userDB.getMySubscribers(privateUUID);
         famousUsers = getUniqueNews(famousUsers, step * 30, (step + 1) * 30);
         return getNewsData(famousUsers).toString();

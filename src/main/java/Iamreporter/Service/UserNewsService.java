@@ -72,15 +72,8 @@ public class UserNewsService {
     @Path("/{newsUUID}/commentNews")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String commentPNewsByUUID(@PathParam("userUUID")String userUUID,@PathParam("newsUUID")String uuid,String json){
-        JSONObject jsonObject = new JSONObject(json);
-        String text = jsonObject.getString("text");
-        String commentUUID;
-        if(jsonObject.has("commentUUID")){
-          commentUUID = jsonObject.getString("commentUUID");
-        }
-
-
+    public String commentPNewsByUUID(@PathParam("userUUID")String userUUID,@PathParam("newsUUID")String newsUUID,String json){
+        service.commentUserNews(newsUUID,userUUID,json);
         return null;
     }
 
@@ -96,31 +89,12 @@ public class UserNewsService {
             }else if (ext.equals("avi")||ext.equals("mp4")||ext.equals("mkv")) {
                 filePath = VIDEO_FILE_LOCATION + newsUUID + entry.getName();
             }
-            saveMediaFile(userUUID, filePath, newsUUID);
+            service.saveMediaFile(userUUID, filePath, newsUUID);
             extractFile(zipIn, filePath);
             zipIn.closeEntry();
             entry = zipIn.getNextEntry();
         }
         zipIn.close();
-    }
-
-    public void saveMediaFile(String userUUID,String filePath,String newsUUID){
-        MediaFile mediaFile = new MediaFile();
-        mediaFile.setDate(UnixTime());
-        mediaFile.setNewsUUID(newsUUID);
-        mediaFile.setUuid(UUID());
-        mediaFile.setUserUUID(userUUID);
-        String ext = FilenameUtils.getExtension(filePath);
-        if(ext.equalsIgnoreCase("jpg")||ext.equalsIgnoreCase("png")||ext.equalsIgnoreCase("jpeg")||ext.equalsIgnoreCase("gif")){
-            mediaFile.setPhotoURL(filePath.replace(BIG_PHOTO_LOCATION,BIG_PHOTO_URL));
-            mediaFile.setSmallPhotoURL(filePath.replace(BIG_PHOTO_URL, SMALL_PHOTO_URL));
-            mediaFile.setVideoURL("");
-        }else if(ext.equalsIgnoreCase("avi")||ext.equalsIgnoreCase("mp4")||ext.equalsIgnoreCase("mkv")){
-            mediaFile.setVideoURL(filePath.replace(VIDEO_FILE_LOCATION,VIDEO_FILE_URL));
-            mediaFile.setPhotoURL("");
-            mediaFile.setSmallPhotoURL("");
-        }
-        mediaFileDB.saveMediaFile(mediaFile);
     }
 
     public static String getFileExtension(String fileName) {

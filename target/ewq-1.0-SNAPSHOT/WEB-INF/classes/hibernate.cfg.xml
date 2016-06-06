@@ -6,8 +6,8 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.password">root</property>
-        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">telez1213</property>
+        <property name="hibernate.connection.username">reporter_qwerty</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/reporter_iamreporter?autoReconnect=true&amp;useUnicode=true&amp;createDatabaseIfNotExist=true&amp;characterEncoding=utf-8</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="show_sql">true</property>

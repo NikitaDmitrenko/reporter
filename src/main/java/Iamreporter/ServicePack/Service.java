@@ -2,6 +2,7 @@ package Iamreporter.ServicePack;
 
 import Iamreporter.DB.*;
 import Iamreporter.Model.*;
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,9 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import static Iamreporter.Helper.Helper.GOOGLE_MAPS;
-import static Iamreporter.Helper.Helper.UUID;
-import static Iamreporter.Helper.Helper.UnixTime;
+import static Iamreporter.Helper.Helper.*;
+import static Iamreporter.Helper.Helper.VIDEO_FILE_URL;
 
 public class Service {
 
@@ -100,6 +100,26 @@ public class Service {
         }
         return jsonArray;
     }
+
+    public void saveMediaFile(String userUUID,String filePath,String newsUUID){
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setDate(UnixTime());
+        mediaFile.setNewsUUID(newsUUID);
+        mediaFile.setUuid(UUID());
+        mediaFile.setUserUUID(userUUID);
+        String ext = FilenameUtils.getExtension(filePath);
+        if(ext.equalsIgnoreCase("jpg")||ext.equalsIgnoreCase("png")||ext.equalsIgnoreCase("jpeg")||ext.equalsIgnoreCase("gif")){
+            mediaFile.setPhotoURL(filePath.replace(BIG_PHOTO_LOCATION,BIG_PHOTO_URL));
+            mediaFile.setSmallPhotoURL(filePath.replace(BIG_PHOTO_URL, SMALL_PHOTO_URL));
+            mediaFile.setVideoURL("");
+        }else if(ext.equalsIgnoreCase("avi")||ext.equalsIgnoreCase("mp4")||ext.equalsIgnoreCase("mkv")){
+            mediaFile.setVideoURL(filePath.replace(VIDEO_FILE_LOCATION,VIDEO_FILE_URL));
+            mediaFile.setPhotoURL("");
+            mediaFile.setSmallPhotoURL("");
+        }
+        mediaFileDB.saveMediaFile(mediaFile);
+    }
+
 
     public List<CommentCreator> getComments(String uuid){
         List<Comment> comments = commentDB.getCOmmentByNewsUUID(uuid);
@@ -291,9 +311,4 @@ public class Service {
             }
         }
     }
-
-    public void startCommentActivity(String newsUUID,String userUUID,String text,String commentUUID){
-
-    }
-
 }

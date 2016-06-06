@@ -58,7 +58,7 @@ public class Registration {
 
                 userDB.saveUser(user);
 
-                response.put("uuid",publicUUID);
+                response.put("uuid",privateUUID);
                 response.put("email", true);
             } else {
                 response.put("email", false);

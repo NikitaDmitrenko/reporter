@@ -102,8 +102,11 @@ public class UserProfile {
         JSONObject jsonObject = new JSONObject();
         User anotherUser = db.getUserByPublicUUID(publicUserUUID);
         if(user!=null) {
+            System.out.print("Another user "+anotherUser);
             jsonObject = getUserData(anotherUser.getPrivateUUID());
             jsonObject.put("publicUUID",publicUserUUID);
+        }else{
+            jsonObject.put("user1","");
         }
         return jsonObject.toString();
     }
@@ -148,27 +151,29 @@ public class UserProfile {
         List<UserNews> userNewsLIst = userNewsDB.getUserNews(userUUID);
         JSONArray jsonArray = new JSONArray();
         JSONObject js;
-        for(UserNews news : userNewsLIst){
-            js = new JSONObject();
-            List<MediaFile> mediaFile = mediaFileDB.getNewsPhotos(news.getUuid());
-            js.put("text",news.getText());
-            js.put("theme",news.getUserNewsTheme());
-            js.put("viewsCount",news.getCountViews());
-            js.put("date",news.getDate());
-            if(!mediaFile.isEmpty()) {
-                MediaFile mediaFile1 = getPhotoFile(mediaFile);
-                if(mediaFile1!=null) {
-                    js.put("bigPhotoURL", mediaFile1.getPhotoURL());
-                    js.put("smallPhotoURL", mediaFile1.getSmallPhotoURL());
-                }else{
+        if(!userNewsLIst.isEmpty()) {
+            for (UserNews news : userNewsLIst) {
+                js = new JSONObject();
+                List<MediaFile> mediaFile = mediaFileDB.getNewsPhotos(news.getUuid());
+                js.put("text", news.getText());
+                js.put("theme", news.getUserNewsTheme());
+                js.put("viewsCount", news.getCountViews());
+                js.put("date", news.getDate());
+                if (!mediaFile.isEmpty()) {
+                    MediaFile mediaFile1 = getPhotoFile(mediaFile);
+                    if (mediaFile1 != null) {
+                        js.put("bigPhotoURL", mediaFile1.getPhotoURL());
+                        js.put("smallPhotoURL", mediaFile1.getSmallPhotoURL());
+                    } else {
+                        js.put("bigPhotoURL", "");
+                        js.put("smallPhotoURL", "");
+                    }
+                } else {
                     js.put("bigPhotoURL", "");
                     js.put("smallPhotoURL", "");
                 }
-            }else{
-                js.put("bigPhotoURL", "");
-                js.put("smallPhotoURL", "");
+                jsonArray.put(js);
             }
-            jsonArray.put(js);
         }
         return jsonArray;
     }

@@ -34,6 +34,7 @@ public class Login {
         JSONObject jsonObject1 = new JSONObject();
         if(user!=null){
             jsonObject1.put("userUUID",user.getPrivateUUID());
+            jsonObject1.put("name",user.getName());
             jsonObject1.put("login",true);
         }else{
             jsonObject1.put("userUUID","");
