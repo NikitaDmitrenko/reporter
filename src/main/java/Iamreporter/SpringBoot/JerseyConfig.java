@@ -14,13 +14,15 @@ import javax.ws.rs.ApplicationPath;
 public class JerseyConfig extends ResourceConfig {
 
     public JerseyConfig(){
-
         register(MultiPartFeature.class);
+        register(AllReporter.class);
+        register(CategoryNews.class);
+        register(Feed.class);
+        register(Login.class);
+        register(SocialRegistrationResource.class);
+        register(TopNews.class);
         register(UserNewsService.class);
         register(UserProfile.class);
-        register(AllReporter.class);
-        register(Login.class);
-        register(TopNews.class);
-
+        register(Registration.class);
     }
 }

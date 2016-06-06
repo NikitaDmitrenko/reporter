@@ -1,11 +1,12 @@
 package Iamreporter.Service;
 
-import javax.ws.rs.GET;
+import org.springframework.stereotype.Component;
+
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 
 
 @Path("/{userPrivateUUID}/feed")
+@Component
 public class Feed {
 
 }

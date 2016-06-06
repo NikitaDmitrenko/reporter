@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Properties;
 
 import static Iamreporter.Helper.Helper.GOOGLE_MAPS;
+import static Iamreporter.Helper.Helper.UUID;
 import static Iamreporter.Helper.Helper.UnixTime;
 
 public class Service {
@@ -25,7 +26,6 @@ public class Service {
     UserNewsDB userNewsDB = new UserNewsDB();
     CommentDB commentDB = new CommentDB();
     UserDB db = new UserDB();
-    ViewsDb viewsDB = new ViewsDb();
     LikesDB likeDB = new LikesDB();
     MediaFileDB mediaFileDB = new MediaFileDB();
     final String username = "dmitrenkonikita1213@gmail.com";
@@ -243,7 +243,7 @@ public class Service {
         return mediaFile;
     }
 
-    public JSONObject likePhoto(String userUUID,String newsUUID){
+    public JSONObject likeNews(String userUUID, String newsUUID){
         User user = db.getUserByPrivateUUID(userUUID);
         UserNews userNews =  userNewsDB.getNewsByUUID(newsUUID);
         JSONObject jsonObject = new JSONObject();
@@ -270,8 +270,26 @@ public class Service {
     }
 
 
-    public void startCommentActivity(String newsUUID,String userUUID,String text){
-
+    public void commentUserNews(String newsUUID,String userUUID,String json){
+        JSONObject jsonObject = new JSONObject(json);
+        UserNews userNews = userNewsDB.getNewsByUUID(newsUUID);
+        User user = db.getUserByPrivateUUID(userUUID);
+        if(user!=null && userNews!=null) {
+            String text = jsonObject.getString("text");
+            String to = null;
+            if (jsonObject.has("to")) {
+                to = jsonObject.getString("to");
+            }
+            Comment comment = new Comment();
+            comment.setNewsUUID(newsUUID);
+            comment.setAuthorUUID(userUUID);
+            comment.setText(text);
+            comment.setDate(UnixTime());
+            comment.setCommentUUID(UUID());
+            if (to != null) {
+                comment.setToUserUUID(to);
+            }
+        }
     }
 
     public void startCommentActivity(String newsUUID,String userUUID,String text,String commentUUID){

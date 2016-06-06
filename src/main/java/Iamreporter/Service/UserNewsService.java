@@ -65,7 +65,7 @@ public class UserNewsService {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public String likeNewsByUUID(@PathParam("userUUID")String userUUID,@PathParam("newsUUID")String newsUUID){
-        return service.likePhoto(userUUID, newsUUID).toString();
+        return service.likeNews(userUUID, newsUUID).toString();
     }
 
     @POST

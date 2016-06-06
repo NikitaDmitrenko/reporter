@@ -24,20 +24,25 @@ public class Helper {
         return UUID.randomUUID().toString();
     }
 
-    public static final String ARCHIVE_LOCATION = "D:\\";
-    public static final String ARCHIVE_URL = "http://server.tripodapp.com:8080/images/archive/";
+    public static final String ARCHIVE_LOCATION = "/var/lib/tomcat7/webapps/ROOT/image/archive/";
+    public static final String ARCHIVE_URL = "http://test.mediaretail.com.ua:8095/image/archive/";
+    //D:
 
-    public static final String VIDEO_FILE_URL = "http://server.tripodapp.com:8080/images/video/";
-    public static final String VIDEO_FILE_LOCATION = "D:\\";
+    public static final String VIDEO_FILE_URL = "http://test.mediaretail.com.ua:8095/image/videofile/";
+    public static final String VIDEO_FILE_LOCATION = "/var/lib/tomcat7/webapps/ROOT/image/videofile/";
+    //D:\
 
-    public static final String BIG_PHOTO_LOCATION ="D:\\";
-    public static final String BIG_PHOTO_URL = "http://server.tripodapp.com:8080/images/bigphotourl/";
+    public static final String BIG_PHOTO_LOCATION ="/var/lib/tomcat7/webapps/ROOT/image/bigPhoto/";
+    public static final String BIG_PHOTO_URL = "http://test.mediaretail.com.ua:8095/image/bigPhoto/";
+    //D:\
 
-    public static final String SMALL_PHOTO_LOCATION = "C:\\";
-    public static final String SMALL_PHOTO_URL = "http://server.tripodapp.com:8080/images/smallphotourl/";
+    public static final String SMALL_PHOTO_LOCATION = "/var/lib/tomcat7/webapps/ROOT/image/smallPhoto/";
+    public static final String SMALL_PHOTO_URL = "http://test.mediaretail.com.ua:8095/image/smallPhoto/";
+    //C:\
 
-    public static final String AVATARS_LOCATION = "D:\\";
-    public static final String AVATARS_URL = "http://server.tripodapp.com:8080/images/avatars/";
+    public static final String AVATARS_LOCATION = "/var/lib/tomcat7/webapps/ROOT/image/avatars/";
+    //D:\
+    public static final String AVATARS_URL = "http://test.mediaretail.com.ua:8095/image/avatars/";
 
     public static final String GOOGLE_MAPS = "https://maps.googleapis.com/maps/api/geocode/json?latlng=latitude,longitude&key=AIzaSyCnzsWY6u5anRnUgwGJOZ2Bqa72buIaNv8";
 

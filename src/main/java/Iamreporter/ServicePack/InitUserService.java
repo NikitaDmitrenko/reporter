@@ -20,13 +20,14 @@ public class InitUserService {
     public  User userInit(JSONObject js){
         User user ;
         String name = js.getString("name");
+        String email = js.getString("email");
         if(js.has("facebook_ID")){
             String facebookId = js.getString("facebook_ID");
             user = userDB.getUserByFacebookId(facebookId);
             if(user==null){
                 user = new User();
                 user.setFacebookId(facebookId);
-                user = setUserData(user,name);
+                user = setUserData(user,name,email);
             }
         }else if(js.has("twitter_ID")){
             String twitterId = js.getString("twitter_ID");
@@ -34,7 +35,7 @@ public class InitUserService {
             if(user==null){
                 user = new User();
                 user.setTwitterId(twitterId);
-                user = setUserData(user,name);
+                user = setUserData(user,name,email);
             }
         }else {
             String vkontakteId = js.getString("vkontakte_ID");
@@ -42,18 +43,17 @@ public class InitUserService {
             if(user==null){
                 user = new User();
                 user.setVkId(vkontakteId);
-                user = setUserData(user,name);
+                user = setUserData(user,name,email);
             }
         }
         return user;
     }
 
-
-
-    public User setUserData(User user,String name){
+    public User setUserData(User user,String name,String email){
         user.setPrivateUUID(UUID());
         user.setPublicUUID(UUID());
         user.setName(name);
+        user.setEmail(email);
         userDB.saveUser(user);
         return user;
     }

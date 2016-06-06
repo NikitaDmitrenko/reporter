@@ -6,6 +6,7 @@ import Iamreporter.Model.MediaFile;
 import Iamreporter.Model.UserNews;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/category")
+@Component
 public class CategoryNews {
 
     UserNewsDB userNewsDB = new UserNewsDB();

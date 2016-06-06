@@ -43,4 +43,21 @@ public class CommentDB {
         }
         return count;
     }
+
+
+    public void saveComment(Comment comment){
+        Transaction transaction = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            session.save(comment);
+            session.getTransaction().commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+
+    }
 }

@@ -30,20 +30,10 @@ public class UserProfile {
     FriendRelationDB friendRelationDB = new FriendRelationDB();
 
     @GET
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     public String getSelfProfile(@PathParam("userUUID")String privateUUID){
-        User user = db.getUserByPrivateUUID(privateUUID);
-        JSONObject jsonObject = new JSONObject();
-        if(user!=null) {
-            jsonObject.put("name", user.getName());
-            jsonObject.put("email",user.getEmail());
-            jsonObject.put("city", user.getCity());
-            jsonObject.put("avatarURL",user.getAvatarURL());
-            jsonObject.put("description", user.getDescription());
-            jsonObject.put("views", userNewsDB.getUserNewsViewsCount(user.getPrivateUUID()));
-            jsonObject.put("news", getUserNews(user.getPrivateUUID()));
-            jsonObject.put("subscribers",friendRelationDB.getUserSubbscribersCount(user.getPrivateUUID()));
-        }
-        return jsonObject.toString();
+        return getUserData(privateUUID).toString();
     }
 
     @PUT
@@ -52,19 +42,14 @@ public class UserProfile {
     public String updateProfile(@PathParam("userUUID") String userUUID, String json) {
         JSONObject jsonObject = new JSONObject(json);
         User user = db.getUserByPrivateUUID(userUUID);
-        JSONObject jsonObject1 = new JSONObject();
+        JSONObject jsonObject1 ;
         if (user != null) {
             user.setCity(jsonObject.getString("city"));
             user.setDescription(jsonObject.getString("description"));
             db.updateUser(user);
-            jsonObject1.put("name", user.getName());
-            jsonObject1.put("email",user.getEmail());
-            jsonObject1.put("city", user.getCity());
-            jsonObject1.put("avatarURL",user.getAvatarURL());
-            jsonObject1.put("description", user.getDescription());
-            jsonObject1.put("views", userNewsDB.getUserNewsViewsCount(user.getPrivateUUID()));
-            jsonObject1.put("news", getUserNews(user.getPrivateUUID()));
-            jsonObject1.put("subscribers",friendRelationDB.getUserSubbscribersCount(user.getPrivateUUID()));
+            jsonObject1 = getUserData(userUUID);
+        }else{
+            jsonObject1 = new JSONObject();
         }
 
         return jsonObject1.toString();
@@ -73,6 +58,8 @@ public class UserProfile {
 
     @GET
     @Path("/myNews/{newsUUID}")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     public String myNews(@PathParam("userUUID")String privateUUID,@PathParam("newsUUID")String newsuUID){
         User user = db.getUserByPrivateUUID(privateUUID);
         JSONObject jsonObject = new JSONObject();
@@ -108,26 +95,23 @@ public class UserProfile {
 
     @GET
     @Path("/anotherUser/{publicUserUUID}")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     public String getUserProfile(@PathParam("userUUID")String privateUUID, @PathParam("publicUserUUID")String publicUserUUID){
         User user = db.getUserByPrivateUUID(privateUUID);
         JSONObject jsonObject = new JSONObject();
         User anotherUser = db.getUserByPublicUUID(publicUserUUID);
         if(user!=null) {
-            jsonObject.put("name",anotherUser.getName());
-            jsonObject.put("email",anotherUser.getEmail());
-            jsonObject.put("city",anotherUser.getCity());
-            jsonObject.put("avatarURL",anotherUser.getAvatarURL());
+            jsonObject = getUserData(anotherUser.getPrivateUUID());
             jsonObject.put("publicUUID",publicUserUUID);
-            jsonObject.put("description",anotherUser.getDescription());
-            jsonObject.put("views",userNewsDB.getUserNewsViewsCount(anotherUser.getPrivateUUID()));
-            jsonObject.put("subscribers",friendRelationDB.getUserSubbscribersCount(anotherUser.getPrivateUUID()));
-            jsonObject.put("news",getUserNews(anotherUser.getPrivateUUID()));
         }
         return jsonObject.toString();
     }
 
     @POST
     @Path("/anotherUser/{publicUserUUID}/sendMessage")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     public String sendMessageToAnotherUser(@PathParam("userUUID")String userUUID,
                                            @PathParam("publicUserUUID")String publicUserUUID,
                                            String json){
@@ -203,4 +187,19 @@ public class UserProfile {
         return mediaFile;
     }
 
+    public JSONObject getUserData(String privateUUID){
+        User user = db.getUserByPrivateUUID(privateUUID);
+        JSONObject jsonObject = new JSONObject();
+        if(user!=null) {
+            jsonObject.put("name", user.getName());
+            jsonObject.put("email",user.getEmail());
+            jsonObject.put("city", user.getCity());
+            jsonObject.put("avatarURL",user.getAvatarURL());
+            jsonObject.put("description", user.getDescription());
+            jsonObject.put("views", userNewsDB.getUserNewsViewsCount(user.getPrivateUUID()));
+            jsonObject.put("news", getUserNews(user.getPrivateUUID()));
+            jsonObject.put("subscribers",friendRelationDB.getUserSubbscribersCount(user.getPrivateUUID()));
+        }
+        return jsonObject;
+    }
 }
