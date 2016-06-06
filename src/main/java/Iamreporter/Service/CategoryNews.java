@@ -2,7 +2,6 @@ package Iamreporter.Service;
 
 import Iamreporter.DB.MediaFileDB;
 import Iamreporter.DB.UserNewsDB;
-import Iamreporter.DB.ViewsDb;
 import Iamreporter.Model.MediaFile;
 import Iamreporter.Model.UserNews;
 import org.json.JSONArray;

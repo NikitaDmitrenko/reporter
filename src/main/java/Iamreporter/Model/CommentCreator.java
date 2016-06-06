@@ -10,10 +10,6 @@ public class CommentCreator {
 
     private String to;
 
-    private int likeCount;
-
-    private int vievCount;
-
     public String getName() {
         return name;
     }
@@ -44,21 +40,5 @@ public class CommentCreator {
 
     public void setTo(String to) {
         this.to = to;
-    }
-
-    public int getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
-    }
-
-    public int getVievCount() {
-        return vievCount;
-    }
-
-    public void setVievCount(int vievCount) {
-        this.vievCount = vievCount;
     }
 }

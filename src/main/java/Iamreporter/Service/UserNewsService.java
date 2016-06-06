@@ -61,7 +61,7 @@ public class UserNewsService {
     }
 
     @POST
-    @Path("/{newsUUID}/likePhoto")
+    @Path("/{newsUUID}/likeNews")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public String likeNewsByUUID(@PathParam("userUUID")String userUUID,@PathParam("newsUUID")String newsUUID){
@@ -69,7 +69,7 @@ public class UserNewsService {
     }
 
     @POST
-    @Path("/{newsUUID}/commentPhoto")
+    @Path("/{newsUUID}/commentNews")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String commentPNewsByUUID(@PathParam("userUUID")String userUUID,@PathParam("newsUUID")String uuid,String json){

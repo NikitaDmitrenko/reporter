@@ -31,8 +31,6 @@ public class Service {
     final String username = "dmitrenkonikita1213@gmail.com";
     final String password = "telez1213";
 
-
-
     public UserNews registerUserNews(String json,User user,String newsUUID){
         JSONObject jsonObject = new JSONObject(json);
         UserNews news = new UserNews();
@@ -115,7 +113,6 @@ public class Service {
             }else{
                 commentCreator.setTo("");
             }
-            commentCreator.setVievCount(0);
             creators.add(commentCreator);
         }
         return creators;

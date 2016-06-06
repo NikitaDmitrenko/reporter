@@ -11,6 +11,12 @@ public class InitUserService {
 
     private  UserDB userDB = new UserDB();
 
+    public String getUUIDBySocials(String socialId) {
+        JSONObject js = new JSONObject(socialId);
+        User user = userInit(js);
+        return new JSONObject().put("uuid", user.getPrivateUUID()).toString();
+    }
+
     public  User userInit(JSONObject js){
         User user ;
         String name = js.getString("name");
@@ -42,11 +48,7 @@ public class InitUserService {
         return user;
     }
 
-    public String getUUIDBySocials(String socialId) {
-        JSONObject js = new JSONObject(socialId);
-        User user = userInit(js);
-        return new JSONObject().put("uuid", user.getPrivateUUID()).toString();
-    }
+
 
     public User setUserData(User user,String name){
         user.setPrivateUUID(UUID());

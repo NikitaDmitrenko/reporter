@@ -79,9 +79,6 @@ public class UserProfile {
         return null;
     }
 
-
-
-
     @PUT
     @Path("/uploadavatar")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -119,7 +116,7 @@ public class UserProfile {
             jsonObject.put("name",anotherUser.getName());
             jsonObject.put("email",anotherUser.getEmail());
             jsonObject.put("city",anotherUser.getCity());
-            jsonObject.put("views",userNewsDB.getUserNewsViewsCount(anotherUser.getPrivateUUID()));
+            jsonObject.put("avatarURL",anotherUser.getAvatarURL());
             jsonObject.put("publicUUID",publicUserUUID);
             jsonObject.put("description",anotherUser.getDescription());
             jsonObject.put("views",userNewsDB.getUserNewsViewsCount(anotherUser.getPrivateUUID()));
