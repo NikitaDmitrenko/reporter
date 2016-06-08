@@ -8,7 +8,17 @@ public class CommentCreator {
 
     private Long date;
 
-    private String to;
+    private String toCommentUUID;
+
+    private String toAuthorUUID;
+
+    public String getToAuthorUUID() {
+        return toAuthorUUID;
+    }
+
+    public void setToAuthorUUID(String toAuthorUUID) {
+        this.toAuthorUUID = toAuthorUUID;
+    }
 
     public String getName() {
         return name;
@@ -34,11 +44,11 @@ public class CommentCreator {
         this.date = date;
     }
 
-    public String getTo() {
-        return to;
+    public String getToCommentUUID() {
+        return toCommentUUID;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setToCommentUUID(String toCommentUUID) {
+        this.toCommentUUID = toCommentUUID;
     }
 }

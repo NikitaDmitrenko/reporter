@@ -70,7 +70,7 @@ public class LikeNews {
     }
 
     public int getDigitalStatus(){
-        int status = 0;
+        int status;
         if(this.status){
             status = 1;
         }else{

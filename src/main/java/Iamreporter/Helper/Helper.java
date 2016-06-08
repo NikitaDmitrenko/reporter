@@ -24,9 +24,11 @@ public class Helper {
         return UUID.randomUUID().toString();
     }
 
-    public static final String ARCHIVE_LOCATION = "/var/lib/tomcat7/webapps/ROOT/image/archive/";
+    public static final String GCM_SERVER = "http://gcm-http.googleapis.com/gcm/send";
+
+    public static final String ARCHIVE_LOCATION = "D:\\";
     public static final String ARCHIVE_URL = "http://test.mediaretail.com.ua:8095/image/archive/";
-    //D:  /var/lib/tomcat7/webapps/ROOT/image/archive/
+    //D:\ /var/lib/tomcat7/webapps/ROOT/image/archive/
 
     public static final String VIDEO_FILE_URL = "http://test.mediaretail.com.ua:8095/image/videofile/";
     public static final String VIDEO_FILE_LOCATION = "D:\\";
@@ -42,9 +44,9 @@ public class Helper {
     //C:\  /var/lib/tomcat7/webapps/ROOT/image/smallPhoto/
 
     public static final String AVATARS_URL = "http://test.mediaretail.com.ua:8095/image/avatars/";
-    public static final String AVATARS_LOCATION = "/var/lib/tomcat7/webapps/ROOT/image/avatars/";
+    public static final String AVATARS_LOCATION = "D:\\";
     //D:\ /var/lib/tomcat7/webapps/ROOT/image/avatars/
-    
+
     public static final String GOOGLE_MAPS = "https://maps.googleapis.com/maps/api/geocode/json?latlng=latitude,longitude&key=AIzaSyCnzsWY6u5anRnUgwGJOZ2Bqa72buIaNv8";
 
     public static double getDimension(String fileURL)  {

@@ -4,10 +4,12 @@ import Iamreporter.Hibernate.HibernateUtil;
 import Iamreporter.Model.FriendRelation;
 import Iamreporter.Model.User;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 public class FriendRelationDB {
-
 
     public FriendRelation getFriendRelation(String userWhoAddUUID,String userWhomAddUUID){
         Transaction transaction = null;

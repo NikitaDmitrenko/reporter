@@ -4,19 +4,17 @@ import Iamreporter.Hibernate.HibernateUtil;
 import Iamreporter.Model.Comment;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
 import java.util.List;
-
 
 public class CommentDB {
 
-    public List<Comment> getCOmmentByNewsUUID(String uuid){
+    public List<Comment> getNewsComments(String uuid){
         Transaction transaction = null;
         List<Comment> comments = null;
         try{
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            comments = (List<Comment>)session.createQuery("from Comment where newsUUID =:userNewsUUID order by id desc").setParameter("userNewsUUID",uuid).list();
+            comments = (List<Comment>)session.createQuery("from Comment where newsUUID =:userNewsUUID").setParameter("userNewsUUID",uuid).list();
             session.getTransaction();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -58,6 +56,5 @@ public class CommentDB {
             }
             e.printStackTrace();
         }
-
     }
 }

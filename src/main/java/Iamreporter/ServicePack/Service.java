@@ -69,7 +69,7 @@ public class Service {
             jsonObject.put("name",user.getName());
             jsonObject.put("countViews",userNewsDB.getUserNewsViewsCount(uuid));
             jsonObject.put("likeCounts",likeDB.getNewsLikesCount(userNews.getUuid()));
-            jsonObject.put("comments",getComments(uuid));
+            jsonObject.put("comments",getNewsComments(uuid));
             jsonObject.put("newsUUID",userNews.getUuid());
             jsonObject.put("commentsCount",commentDB.getNewsCommentsCount(userNews.getUuid()));
             jsonObject.put("photoFiles",getMediaFileInfo(userNews));
@@ -118,24 +118,6 @@ public class Service {
             mediaFile.setSmallPhotoURL("");
         }
         mediaFileDB.saveMediaFile(mediaFile);
-    }
-
-
-    public List<CommentCreator> getComments(String uuid){
-        List<Comment> comments = commentDB.getCOmmentByNewsUUID(uuid);
-        List<CommentCreator> creators = new ArrayList<>();
-        for(Comment comment : comments){
-            CommentCreator commentCreator = new CommentCreator();
-            commentCreator.setText(comment.getText());
-            commentCreator.setDate(comment.getDate());
-            if(comment.getToUserUUID()!=null){
-                commentCreator.setTo(comment.getToUserUUID());
-            }else{
-                commentCreator.setTo("");
-            }
-            creators.add(commentCreator);
-        }
-        return creators;
     }
 
     public String saveNewNews(String json,String userUUID, String newsUUID){
@@ -193,7 +175,7 @@ public class Service {
         WebTarget webTarget = client.target(target);
         Invocation.Builder builder = webTarget.request(MediaType.APPLICATION_JSON);
         String response = builder.get(String.class);
-        System.out.println(response);
+        System.out.println("Rersponse is"+response);
         return "";
 
     }
@@ -264,10 +246,12 @@ public class Service {
     }
 
     public JSONObject likeNews(String userUUID, String newsUUID){
+
         User user = db.getUserByPrivateUUID(userUUID);
         UserNews userNews =  userNewsDB.getNewsByUUID(newsUUID);
         JSONObject jsonObject = new JSONObject();
         LikeNews likeNews;
+
         int status = 0 ;
         if(user!=null && userNews!=null) {
              likeNews = likeDB.getUserLikeFromUserNews(user, userNews);
@@ -290,15 +274,21 @@ public class Service {
     }
 
 
-    public void commentUserNews(String newsUUID,String userUUID,String json){
+    public JSONObject commentUserNews(String newsUUID,String userUUID,String json){
         JSONObject jsonObject = new JSONObject(json);
         UserNews userNews = userNewsDB.getNewsByUUID(newsUUID);
         User user = db.getUserByPrivateUUID(userUUID);
+        JSONObject response;
         if(user!=null && userNews!=null) {
             String text = jsonObject.getString("text");
-            String to = null;
+            String to ;
+            String commentUUID;
             if (jsonObject.has("to")) {
                 to = jsonObject.getString("to");
+                 commentUUID = jsonObject.getString("commentUUID");
+            }else{
+                to = "";
+                commentUUID = "";
             }
             Comment comment = new Comment();
             comment.setNewsUUID(newsUUID);
@@ -306,9 +296,37 @@ public class Service {
             comment.setText(text);
             comment.setDate(UnixTime());
             comment.setCommentUUID(UUID());
-            if (to != null) {
-                comment.setToUserUUID(to);
+            comment.setToUserUUID(to);
+            comment.setToCommentUUID(commentUUID);
+            commentDB.saveComment(comment);
+        }
+        response = getNewsComments(newsUUID);
+        return response;
+    }
+
+    public JSONObject getNewsComments(String newsUUID){
+        List<Comment> newsComments = commentDB.getNewsComments(newsUUID);
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject1;
+        if(!newsComments.isEmpty()){
+            for(Comment comment : newsComments){
+                User user = db.getUserByPrivateUUID(comment.getAuthorUUID());
+                jsonObject1 = new JSONObject();
+                jsonObject1.put("date",comment.getDate());
+                jsonObject1.put("text",comment.getText());
+                jsonObject1.put("avatarURL",user.getAvatarURL());
+                jsonObject1.put("name",user.getName());
+                if(!comment.getToCommentUUID().equals("")){
+                    User user1 = db.getUserByPrivateUUID(comment.getToUserUUID());
+                    jsonObject1.put("toUser",user1.getName());
+                }
+                jsonArray.put(jsonObject1);
             }
         }
+        jsonObject.put("comments",jsonArray);
+        return jsonObject;
     }
+
+
 }

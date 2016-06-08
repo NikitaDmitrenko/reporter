@@ -24,7 +24,7 @@ public class UserDB {
         }
     }
 
-    public List<User> getMySubscribers(String userWhoAddUUID){
+    public List<User> getMySubscribers(String userWhomAddUUID){
         Transaction transaction = null;
         List<User> users = null;
         try{
@@ -32,15 +32,10 @@ public class UserDB {
             transaction = session.beginTransaction();
             users = (List<User>)session.createQuery("from User" +
                     " where privateUUID in " +
-                    "(select userWhomAddUUID from FriendRelation" +
-                    " where userWhoAddUUID =:userWhoAddUUID" +
+                    "(select userWhoAddUUID from FriendRelation" +
+                    " where userWhomAddUUID =:userWhomAddUUID" +
                     " and " +
-                    "status =:status)").setParameter("userWhoAddUUID",userWhoAddUUID).setParameter("status","subscribe").list();
-            if(!users.isEmpty()){
-                System.out.println(users.size());
-            }else{
-                System.out.println(0);
-            }
+                    "status =:status)").setParameter("userWhomAddUUID",userWhomAddUUID).setParameter("status","subscribe").list();
             session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -58,11 +53,6 @@ public class UserDB {
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
             users = (List<User>)session.createQuery("from User where privateUUID !=:privateUUID ").setParameter("privateUUID",userUUID).list();
-            if(!users.isEmpty()){
-                System.out.println(users.size());
-            }else{
-                System.out.println(0);
-            }
             session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
@@ -85,11 +75,6 @@ public class UserDB {
                     " where userWhomAddUUID =:userWhomAddUUID" +
                     " and " +
                     "status =:status)").setParameter("userWhomAddUUID",userWhomAddUUID).setParameter("status","subscribe").list();
-            if(!users.isEmpty()){
-                System.out.println(users.size());
-            }else{
-                System.out.println(0);
-            }
             session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){

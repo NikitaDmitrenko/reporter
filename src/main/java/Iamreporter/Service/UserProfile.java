@@ -56,14 +56,33 @@ public class UserProfile {
     }
 
 
-    @GET
-    @Path("/myNews/{newsUUID}")
+    @PUT
+    @Path("/myNews/{newsUUID}/update")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     public String myNews(@PathParam("userUUID")String privateUUID,@PathParam("newsUUID")String newsuUID){
         User user = db.getUserByPrivateUUID(privateUUID);
         JSONObject jsonObject = new JSONObject();
         return null;
+    }
+
+    @DELETE
+    @Path("/myNews/{newsUUID}/delete")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    public String deleteNews(@PathParam("userUUID")String userUUID,@PathParam("newsUUID")String newsUUID){
+        User user = db.getUserByPrivateUUID(userUUID);
+        UserNews userNews = userNewsDB.getNewsByUUID(newsUUID);
+        JSONObject response = new JSONObject();
+        if(user!=null && userNews!=null && user.getPrivateUUID().equals(userNews.getAuthorUUID())){
+            userNewsDB.deleteNews(userNews);
+            mediaFileDB.deleteMediaFiles(userNews);
+            response.put("news",getUserNews(user.getPrivateUUID()));
+        }else{
+            response.put("news","");
+        }
+        return response.toString();
+
     }
 
     @PUT
@@ -102,7 +121,7 @@ public class UserProfile {
         JSONObject jsonObject = new JSONObject();
         User anotherUser = db.getUserByPublicUUID(publicUserUUID);
         if(user!=null) {
-            System.out.print("Another user "+anotherUser);
+            System.out.print("Another user " + anotherUser);
             jsonObject = getUserData(anotherUser.getPrivateUUID());
             jsonObject.put("publicUUID",publicUserUUID);
         }else{

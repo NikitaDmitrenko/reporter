@@ -5,8 +5,10 @@ import Iamreporter.Model.LikeNews;
 import Iamreporter.Model.User;
 import Iamreporter.Model.UserNews;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 public class LikesDB {
 

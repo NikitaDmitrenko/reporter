@@ -1,11 +1,9 @@
 package Iamreporter.DB;
 
 import Iamreporter.Hibernate.HibernateUtil;
-import Iamreporter.Model.User;
 import Iamreporter.Model.UserNews;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
 import java.util.List;
 
 public class UserNewsDB {
@@ -17,6 +15,21 @@ public class UserNewsDB {
             transaction = session.beginTransaction();
             session.save(userNews);
             transaction.commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteNews(UserNews userNews){
+        Transaction transaction = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            session.delete(userNews);
+            session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
                 transaction.rollback();
@@ -42,39 +55,6 @@ public class UserNewsDB {
         return userNews;
     }
 
-    public List<String> getUserNewsUUIDS(String authorUUID){
-        Transaction transaction = null;
-        List<String> userNewsUUIDS = null;
-        try{
-            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-            transaction = session.beginTransaction();
-            userNewsUUIDS = (List<String>) session.createQuery("select uuid from UserNews uuid  where authorUUID =:authorUUID").setParameter("authorUUID",authorUUID).list();
-            session.getTransaction().commit();
-        }catch (RuntimeException e){
-            if(transaction!=null){
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return userNewsUUIDS;
-    }
-
-    public int getAuthorViewsCount(List<String> newsUUIDS){
-        Transaction transaction = null;
-        int count = 0;
-        try{
-            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-            transaction = session.beginTransaction();
-            count = ((Long)session.createQuery("select count(*) from Views where newsUUID in :newsUUIDS").setParameter("newsUUIDS",newsUUIDS).uniqueResult()).intValue();
-            session.getTransaction().commit();
-        }catch (RuntimeException e){
-            if(transaction!=null){
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return count;
-    }
 
     public List<UserNews> getUserNews(String userUUID){
         Transaction transaction = null;

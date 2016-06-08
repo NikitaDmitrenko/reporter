@@ -6,7 +6,6 @@ import Iamreporter.ServicePack.Service;
 import org.apache.commons.io.FilenameUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 
@@ -27,7 +26,6 @@ public class UserNewsService {
 
     UserDB db = new UserDB();
     Service service = new Service();
-    MediaFileDB mediaFileDB = new MediaFileDB();
     ViewsDb viewsDb = new ViewsDb();
 
     @Path("/create")
@@ -47,7 +45,7 @@ public class UserNewsService {
                 unzipMediaFiles(user.getPrivateUUID(), location, newsUUID);
             }
         }
-        return service.saveNewNews(json,userUUID,newsUUID);
+        return service.saveNewNews(json, userUUID, newsUUID);
     }
 
 
@@ -73,8 +71,7 @@ public class UserNewsService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String commentPNewsByUUID(@PathParam("userUUID")String userUUID,@PathParam("newsUUID")String newsUUID,String json){
-        service.commentUserNews(newsUUID,userUUID,json);
-        return null;
+        return service.commentUserNews(newsUUID, userUUID,json).toString();
     }
 
 

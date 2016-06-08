@@ -2,11 +2,11 @@ package Iamreporter.DB;
 
 import Iamreporter.Hibernate.HibernateUtil;
 import Iamreporter.Model.MediaFile;
+import Iamreporter.Model.UserNews;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
-
 
 public class MediaFileDB {
 
@@ -17,6 +17,21 @@ public class MediaFileDB {
             transaction = session.beginTransaction();
             session.save(mediaFile);
             transaction.commit();
+        }catch (RuntimeException e){
+            if(transaction!=null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteMediaFiles(UserNews userNews){
+        Transaction transaction = null;
+        try{
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.beginTransaction();
+            session.createQuery("delete from MediaFile where newsUUID = :newsUUID").setParameter("newsUUID",userNews.getUuid()).executeUpdate();
+            session.getTransaction().commit();
         }catch (RuntimeException e){
             if(transaction!=null){
                 transaction.rollback();

@@ -29,6 +29,9 @@ public class Comment {
     @Column(name = "TO_USER_UUID")
     private String toUserUUID;
 
+    @Column(name = "TO_COMMENT_UUID")
+    private String toCommentUUID;
+
     @Column(name = "COMMENT_DATE")
     private Long date;
 
@@ -90,5 +93,13 @@ public class Comment {
 
     public void setNewsUUID(String userNewsUUID) {
         this.newsUUID = userNewsUUID;
+    }
+
+    public String getToCommentUUID() {
+        return toCommentUUID;
+    }
+
+    public void setToCommentUUID(String toCommentUUID) {
+        this.toCommentUUID = toCommentUUID;
     }
 }
